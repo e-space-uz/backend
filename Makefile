@@ -27,5 +27,9 @@ push-image:
 swag_init:
 	swag init -g api/main.go -o api/docs
 
+tidy:
+	go mod vendor
+	go mod tidy
+
 .PHONY: proto
 .DEFAULT_GOAL:=run
