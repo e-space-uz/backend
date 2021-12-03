@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
-)``
+)
 
 type Entity struct {
 	ID             string               `json:"id" bson:"_id"`
