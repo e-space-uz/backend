@@ -4,29 +4,8 @@ import (
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
-)
+)``
 
-type City struct {
-	ID     string `json:"id" bson:"_id"`
-	Name   string `json:"name" bson:"name"`
-	RuName string `json:"ru_name" bson:"ru_name"`
-	Soato  uint64 `json:"soato" bson:"soato"`
-	Code   uint32 `json:"code" bson:"code"`
-}
-type Region struct {
-	ID     string `json:"id" bson:"_id"`
-	Name   string `json:"name" bson:"name"`
-	RuName string `json:"ru_name" bson:"ru_name"`
-	Soato  uint64 `json:"soato" bson:"soato"`
-	Code   uint32 `json:"code" bson:"code"`
-}
-type District struct {
-	ID     string `json:"id" bson:"_id"`
-	Name   string `json:"name" bson:"name"`
-	RuName string `json:"ru_name" bson:"ru_name"`
-	Soato  uint64 `json:"soato" bson:"soato"`
-	Code   uint32 `json:"code" bson:"code"`
-}
 type Entity struct {
 	ID             string               `json:"id" bson:"_id"`
 	EntitySoato    string               `json:"entity_soato" bson:"entity_soato"`
@@ -47,7 +26,6 @@ type Entity struct {
 	EntityProperty []*GetEntityProperty `json:"entity_properties" bson:"entity_properties"`
 	CreatedAt      primitive.DateTime   `json:"created_at" bson:"created_at"`
 	UpdatedAt      primitive.DateTime   `json:"updated_at" bson:"updated_at"`
-	Deadline       primitive.DateTime   `json:"deadline" bson:"deadline"`
 }
 
 type GetAllEntities struct {

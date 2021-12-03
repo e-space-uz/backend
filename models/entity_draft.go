@@ -6,11 +6,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-type Applicant struct {
-	UserID      primitive.ObjectID `json:"user_id" bson:"user_id"`
-	Name        string             `json:"name" bson:"name"`
-	PhoneNumber string             `json:"phone_number" bson:"phone_number"`
-}
 type DraftEntity struct {
 	ID             string    `json:"id" bson:"_id"`
 	EntityNumber   string    `json:"entity_number" bson:"entity_number"`
@@ -33,7 +28,6 @@ type EntityDraft struct {
 	Region            *Region              `json:"region" bson:"region"`
 	District          *District            `json:"district" bson:"district"`
 	Status            string               `json:"status" bson:"status"`
-	Applicant         *Applicant           `json:"applicant" bson:"applicant"`
 	Entity            *DraftEntity         `json:"entity" bson:"entity"`
 	EntityGallery     []string             `json:"entity_gallery" bson:"entity_gallery"`
 	EntityProperty    []*GetEntityProperty `json:"entity_properties" bson:"entity_properties"`
@@ -49,7 +43,6 @@ type GetAllEntityDraft struct {
 	City              *City              `json:"city" bson:"city"`
 	Region            *Region            `json:"region" bson:"region"`
 	District          *District          `json:"district" bson:"district"`
-	Applicant         *Applicant         `json:"applicant" bson:"applicant"`
 	Status            string             `json:"status" bson:"status"`
 	EntityProperty    []*EntityProperty  `json:"entity_properties" bson:"entity_properties"`
 	CreatedAt         primitive.DateTime `json:"created_at" bson:"created_at"`
@@ -69,7 +62,6 @@ type CreateEntityDraft struct {
 	City              City                    `bson:"city"`
 	Region            Region                  `bson:"region"`
 	District          District                `bson:"district"`
-	Applicant         Applicant               `bson:"applicant"`
 	StatusId          primitive.ObjectID      `bson:"status_id"`
 	EntityGallery     []string                `bson:"entity_gallery"`
 	EntityProperties  []*CreateEntityProperty `bson:"entity_properties"`
