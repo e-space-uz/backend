@@ -39,7 +39,7 @@ type GetAllPropertiesResponse struct {
 	Count      uint32      `json:"count"`
 }
 
-type CreateProperty struct {
+type CreateUpdateProperty struct {
 	ID               primitive.ObjectID `bson:"_id"`
 	Name             string             `bson:"name"`
 	Type             string             `bson:"type"`

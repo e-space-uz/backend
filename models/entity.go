@@ -46,7 +46,7 @@ type GetAllEntities struct {
 	UpdatedAt        primitive.DateTime `json:"updated_at" bson:"updated_at"`
 }
 
-type CreateEntity struct {
+type CreateUpdateEntity struct {
 	ID                 primitive.ObjectID      `bson:"_id"`
 	Address            string                  `bson:"address"`
 	EntitySoato        string                  `bson:"entity_soato"`
@@ -117,17 +117,11 @@ type UpdateEntityPropertySwag struct {
 	ActionID       string           `json:"action_id" binding:"required"`
 }
 
-type GetAllEntitiesRequestSwag struct {
+type GetAllEntitiesRequest struct {
 	EntitySoato  string `json:"entity_soato"`
-	FromDate     string `json:"from_date" example:"2021-11-21"`
-	ToDate       string `json:"to_date" example:"2021-11-21"`
-	StaffID      string `json:"staff_id"`
-	StaffSoato   string `json:"staff_soato"`
 	CityID       string `json:"city_id"`
 	RegionID     string `json:"region_id"`
-	StatusID     string `json:"status_id"`
 	EntityNumber string `json:"entity_number"`
 	Page         uint32 `json:"page"`
 	Limit        uint32 `json:"limit"`
-	TypeCode     uint64 `json:"entity_type_code"`
 }

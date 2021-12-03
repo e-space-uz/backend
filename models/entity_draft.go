@@ -87,13 +87,10 @@ type ConfirmEntityDraftSwag struct {
 	Comment  string `json:"comment" binding:"required"`
 }
 
-type GetAllEntityDraftsRequestsSwag struct {
-	Date              string `json:"date"`
+type GetAllEntityDraftsRequest struct {
 	CityID            string `json:"city_id"`
 	RegionID          string `json:"region_id"`
 	StatusID          string `json:"status_id"`
-	FromDate          string `json:"from_date" example:"2021-11-21"`
-	ToDate            string `json:"to_date" example:"2021-11-21"`
 	EntityDraftNumber string `json:"entity_draft_number"`
 	Page              uint32 `json:"page"`
 	Limit             uint32 `json:"limit"`
