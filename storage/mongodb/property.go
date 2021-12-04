@@ -54,7 +54,7 @@ func (pr *propertyRepo) Create(ctx context.Context, property *models.CreateUpdat
 	return resp.InsertedID.(primitive.ObjectID).Hex(), nil
 }
 
-func (pr *propertyRepo) Get(id string) (*models.Property, error) {
+func (pr *propertyRepo) Get(ctx context.Context, id string) (*models.Property, error) {
 	var (
 		response *models.Property
 		property []*models.Property
@@ -100,7 +100,7 @@ func (pr *propertyRepo) Get(id string) (*models.Property, error) {
 	return response, nil
 }
 
-func (pr *propertyRepo) GetAll(page, limit uint32, search string) ([]*models.Property, uint32, error) {
+func (pr *propertyRepo) GetAll(ctx context.Context, page, limit uint32, search string) ([]*models.Property, uint32, error) {
 	var (
 		response    []*models.Property
 		properties  []*models.Property
@@ -181,7 +181,7 @@ func (pr *propertyRepo) Delete(id string) error {
 
 	return nil
 }
-func (pr *propertyRepo) Update(property *models.CreateUpdateProperty) error {
+func (pr *propertyRepo) Update(ctx context.Context, property *models.CreateUpdateProperty) error {
 	updateProperty := &models.CreateUpdateProperty{
 		ID:          property.ID,
 		Name:        property.Name,
@@ -224,19 +224,4 @@ func (pr *propertyRepo) Update(property *models.CreateUpdateProperty) error {
 	}
 
 	return nil
-}
-
-func (cr *propertyRepo) PropertyExists(id string) (bool, error) {
-	ObjectID, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		return false, err
-	}
-
-	filter := bson.M{"_id": ObjectID}
-	res, err := cr.collection.CountDocuments(context.Background(), filter)
-	if err != nil {
-		return false, err
-	}
-
-	return res == 1, nil
 }

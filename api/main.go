@@ -17,9 +17,9 @@ import (
 )
 
 type RouterOptions struct {
-	Log      logger.Logger
-	Cfg      config.Config
-	Services storage.StorageI
+	Log     logger.Logger
+	Cfg     config.Config
+	Storage storage.StorageI
 }
 
 // @securityDefinitions.apikey ApiKeyAuth
@@ -39,9 +39,9 @@ func New(opt *RouterOptions) *gin.Engine {
 	router.Use(cors.New(corsConfig))
 
 	handlerV1 := v1.New(&v1.HandlerV1Options{
-		Log:      opt.Log,
-		Cfg:      opt.Cfg,
-		Services: opt.Services,
+		Log:     opt.Log,
+		Cfg:     opt.Cfg,
+		Storage: opt.Storage,
 	})
 	routesV1 := router.Group("/v1")
 	routesV1.Use()

@@ -40,21 +40,13 @@ func (cr *cityRepo) Get(ctx context.Context, id string) (*models.City, error) {
 	return &cityDecode, nil
 }
 
-func (cr *cityRepo) GetAll(ctx context.Context, page, limit, code uint32, name string) ([]*models.City, uint32, error) {
+func (cr *cityRepo) GetAll(ctx context.Context, page, limit uint32) ([]*models.City, uint32, error) {
 	var (
 		response []*models.City
 		cities   []*models.City
 		filter   = bson.D{}
 	)
-	if name != "" {
-		filter = append(filter, primitive.E{Key: "name", Value: bson.D{
-			primitive.E{Key: "$regex", Value: name},
-			primitive.E{Key: "$options", Value: "im"},
-		}})
-	}
-	if code != 0 {
-		filter = append(filter, primitive.E{Key: "code", Value: code})
-	}
+
 	opts := options.Find()
 	skip := (page - 1) * limit
 	opts.SetLimit(int64(limit))
