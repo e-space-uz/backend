@@ -13,9 +13,10 @@ const (
 	PropertyCollection      = "PropertyCollection"
 	GroupPropertyCollection = "GroupPropertyCollection"
 	UserCollection          = "UserCollection"
-	CityCollection          = "CityCollection"
-	RegionCollection        = "RegionCollection"
-	DistrictCollection      = "DistrictCollection"
+	CityCollection             = "CityCollection"
+	RegionCollection           = "RegionCollection"
+	DistrictCollection         = "DistrictCollection"
+	
 )
 
 type Config struct {

@@ -34,7 +34,7 @@ type EntityDraft struct {
 	CreatedAt         primitive.DateTime   `json:"created_at" bson:"created_at"`
 	UpdatedAt         primitive.DateTime   `json:"updated_at" bson:"updated_at"`
 }
-type GetAllEntityDraft struct {
+type GetAllEntityDrafts struct {
 	ID                string             `json:"id" bson:"_id"`
 	EntityDraftNumber string             `json:"entity_draft_number" bson:"entity_draft_number"`
 	EntityDraftSoato  string             `json:"entity_draft_soato" bson:"entity_draft_soato"`
@@ -50,7 +50,7 @@ type GetAllEntityDraft struct {
 }
 type UpdateEntityDraftStatus struct {
 	EntityDraftID string `json:"entity_draft_id"`
-	StatusID      string `json:"status_id"`
+	Status        string `json:"status"`
 }
 
 type CreateEntityDraft struct {
@@ -59,10 +59,10 @@ type CreateEntityDraft struct {
 	EntityDraftNumber string                  `bson:"entity_draft_number" example:"T123"`
 	EntityDraftSoato  string                  `bson:"entity_draft_soato"`
 	Comment           string                  `bson:"comment"`
+	Status            string                  `bson:"status"`
 	City              City                    `bson:"city"`
 	Region            Region                  `bson:"region"`
 	District          District                `bson:"district"`
-	StatusId          primitive.ObjectID      `bson:"status_id"`
 	EntityGallery     []string                `bson:"entity_gallery"`
 	EntityProperties  []*CreateEntityProperty `bson:"entity_properties"`
 	CreatedAt         time.Time               `bson:"created_at"`
@@ -82,7 +82,7 @@ type EntityDraftSwag struct {
 }
 
 type ConfirmEntityDraftSwag struct {
-	StatusID string `json:"status_id" binding:"required"`
+	Status   string `json:"status" binding:"required"`
 	EntityID string `json:"entity_id" binding:"required"`
 	Comment  string `json:"comment" binding:"required"`
 }
@@ -90,7 +90,7 @@ type ConfirmEntityDraftSwag struct {
 type GetAllEntityDraftsRequest struct {
 	CityID            string `json:"city_id"`
 	RegionID          string `json:"region_id"`
-	StatusID          string `json:"status_id"`
+	Status            string `json:"status"`
 	EntityDraftNumber string `json:"entity_draft_number"`
 	Page              uint32 `json:"page"`
 	Limit             uint32 `json:"limit"`
