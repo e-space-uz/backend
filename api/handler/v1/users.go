@@ -9,7 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-// @Router /v1/staff/{user_id} [get]
+// @Router /v1/user/{user_id} [get]
 // @Summary Get Staff
 // @Description API for getting staff
 // @Tags staff
@@ -36,7 +36,7 @@ func (h *handlerV1) GetUser(c *gin.Context) {
 }
 
 // @Security ApiKeyAuth
-// @Router /v1/staff-by-token [get]
+// @Router /v1/user-by-token [get]
 // @Summary Get Staff by token
 // @Description API for getting staff
 // @Tags staff
@@ -58,13 +58,13 @@ func (h *handlerV1) GetStaffByToken(c *gin.Context) {
 	c.JSON(http.StatusOK, staff)
 }
 
-// @Router /v1/staff [get]
+// @Router /v1/user [get]
 // @Summary Getting All Staffs
 // @Description API for getting all staff
 // @Tags staff
 // @Accept json
 // @Produce json
-// @Param find query ek_user_service.GetAllStaffsRequestSwag false "filters"
+// @Param find query models.GetAllStaffsRequestSwag false "filters"
 // @Success 200 {object} user_service.GetAllStaffsResponse
 
 func (h *handlerV1) GetAllStaffs(c *gin.Context) {

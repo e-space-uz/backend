@@ -17,7 +17,7 @@ import (
 // @Tags group_property
 // @Accept json
 // @Produce json
-// @Param group_property body ek_entity_service.GroupPropertySwag true "group property"
+// @Param group_property body models.GroupPropertySwag true "group property"
 // @Success 201 {object} ek_variables.CreateResponse
 
 func (h *handlerV1) CreateGroupProperty(c *gin.Context) {
@@ -52,7 +52,7 @@ func (h *handlerV1) CreateGroupProperty(c *gin.Context) {
 
 func (h *handlerV1) GetGroupProperty(c *gin.Context) {
 	var (
-		response        ek_entity_service.GroupProperty
+		response        models.GroupProperty
 		groupPropertyID = c.Param("group_property_id")
 	)
 	_, err := primitive.ObjectIDFromHex(groupPropertyID)
@@ -98,7 +98,7 @@ func (h *handlerV1) GetGroupPropertyByStatusID(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	// userInfo := ek_user_service.LoginInfo{
+	// userInfo := models.LoginInfo{
 	// 	ID:             "6142c2046074f7fa21292a28",
 	// 	RoleID:         "6142c2046074f7fa21292a28",
 	// 	OrganizationID: "61027e35772d476a220673ec",
@@ -140,7 +140,7 @@ func (h *handlerV1) GetGroupPropertyByStatusID(c *gin.Context) {
 func (h *handlerV1) GetAllGroupProperties(c *gin.Context) {
 	var (
 		search   = c.Query("search")
-		response ek_entity_service.GetAllGroupPropertiesResponse
+		response models.GetAllGroupPropertiesResponse
 	)
 
 	page, err := ParseQueryParam(c, h.log, "page", "1")
@@ -179,7 +179,7 @@ func (h *handlerV1) GetAllGroupProperties(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param group_property_id path string  true "group_property_id"
-// @Param property body ek_entity_service.GroupPropertySwag true "group property"
+// @Param property body models.GroupPropertySwag true "group property"
 // @Success 200 {object} ek_variables.CreateResponse
 
 func (h *handlerV1) UpdateGroupProperty(c *gin.Context) {
@@ -222,7 +222,7 @@ func (h *handlerV1) GetAllGroupPropertiesByType(c *gin.Context) {
 	var (
 		stepQuery   = c.Query("step")
 		typeOfQuery = c.Query("type")
-		response    ek_entity_service.GetAllGroupPropertiesByTypeResponse
+		response    models.GetAllGroupPropertiesByTypeResponse
 	)
 	step, err := strconv.Atoi(stepQuery)
 	if HandleHTTPError(c, http.StatusBadRequest, "error while parsing query to request", err) {

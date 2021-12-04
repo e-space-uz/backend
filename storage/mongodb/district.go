@@ -22,7 +22,7 @@ func NewDistrictRepo(db *mongo.Database) repo.DistrictI {
 		collection: db.Collection(config.DistrictCollection)}
 }
 
-func (cr *districtRepo) Get(id string) (*models.District, error) {
+func (cr *districtRepo) Get(ctx context.Context, id string) (*models.District, error) {
 	var districtDecode models.District
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -41,7 +41,7 @@ func (cr *districtRepo) Get(id string) (*models.District, error) {
 }
 
 // This method to get all districts.
-func (cr *districtRepo) GetAll(page, limit, code uint32, name string) ([]*models.District, uint32, error) {
+func (cr *districtRepo) GetAll(ctx context.Context, page, limit, code uint32, name string) ([]*models.District, uint32, error) {
 	var (
 		response         []*models.District
 		districts        []*models.District
@@ -118,7 +118,7 @@ func (cr *districtRepo) GetAll(page, limit, code uint32, name string) ([]*models
 
 	return response, uint32(count), nil
 }
-func (cr *districtRepo) GetAllByCityRegion(regionID, cityID, name string) ([]*models.District, uint32, error) {
+func (cr *districtRepo) GetAllByCityRegion(ctx context.Context, regionID, cityID, name string) ([]*models.District, uint32, error) {
 	var (
 		response         []*models.District
 		districts        []*models.District

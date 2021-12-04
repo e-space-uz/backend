@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -26,11 +25,9 @@ func (h *handlerV1) GetRegion(c *gin.Context) {
 	if HandleHTTPError(c, http.StatusBadRequest, "error while creating regionID", err) {
 		return
 	}
-	region, err := h.storage.Region().Get(context.Background(), &models.GetReq{
-		Id: regionID,
-	})
+	region, err := h.storage.Region().Get(context.Background(), regionID)
 
-	if HandleHTTPError(c, "error while getting region ", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "error while getting region ", err) {
 		return
 	}
 
@@ -52,10 +49,9 @@ func (h *handlerV1) GetRegion(c *gin.Context) {
 
 func (h *handlerV1) GetAllRegions(c *gin.Context) {
 	var (
-		name          = c.Query("name")
-		soatoQuery    = c.Query("soato")
-		soato         int
-		userInfo, err = h.UserInfo(c, false)
+		soatoQuery = c.Query("soato")
+		soato      int
+		_, err     = h.UserInfo(c, false)
 	)
 	if HandleHTTPError(c, http.StatusUnauthorized, "SettingService.Region.GetAllRegion", err) {
 		return
@@ -69,9 +65,6 @@ func (h *handlerV1) GetAllRegions(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	if userInfo.UserType == "staff" && userInfo.Soato != "" && len(userInfo.Soato) >= 6 {
-		soato, _ = strconv.Atoi(userInfo.Soato)
-	}
 	if soatoQuery != "" {
 		soato, err = ParseQueryParam(c, h.log, "soato", "0")
 		if err != nil {
@@ -80,14 +73,11 @@ func (h *handlerV1) GetAllRegions(c *gin.Context) {
 	}
 	fmt.Println(soato)
 
-	regions, err := h.storage.Region().GetAll(
+	regions, count, err := h.storage.Region().GetAll(
 		context.Background(),
-		&models.	GetAllRegionsRequest{
-			Name:  name,
-			Soato: uint32(soato),
-			Page:  uint32(page),
-			Limit: uint32(limit),
-		})
+		uint32(page),
+		uint32(limit),
+	)
 
 	if HandleHTTPError(c, http.StatusBadRequest, "error while getting all regions", err) {
 		return
@@ -108,31 +98,21 @@ func (h *handlerV1) GetAllRegions(c *gin.Context) {
 
 func (h *handlerV1) GetAllRegionsByCityID(c *gin.Context) {
 	var (
-		cityID   = c.Param("city_id")
-		_, err   = primitive.ObjectIDFromHex(cityID)
-		response = &models.GetAllRegionsResponse{}
-		name     = c.Query("name")
+		cityID = c.Param("city_id")
+		_, err = primitive.ObjectIDFromHex(cityID)
+		name   = c.Query("name")
 		// redisKey = ek_variables.RedisRegionKey + c.Request.URL.Query().Encode()
 	)
 	if HandleHTTPError(c, http.StatusBadRequest, "SettingService.GetAllRegionsByCityID.ParsingCityID", err) {
 		return
 	}
-	// err = h.redisCache.Get(redisKey, &response)
-	// if err == ek_variables.ErrCacheMiss {
-	response, err = h.storage.Region().GetAllByCity(
+	response, count, err := h.storage.Region().GetAllByCity(
 		context.Background(),
-		&models.GetAllByCityRequest{
-			CityId: cityID,
-			Name:   name,
-		})
-	if HandleHTTPError(c, "error while getting all regions", err) {
+		cityID,
+		name,
+	)
+	if HandleHTTPError(c, http.StatusBadRequest, "error while getting all regions", err) {
 		return
 	}
-	// if err = h.redisCache.SetWithDeadline(redisKey, response, time.Duration(5*time.Minute)); HandleHTTPError(c, "EntityService.Entity.CacheGetAllEntity", err) {
-	// 	return
-	// }
-	// } else if HandleHTTPError(c, http.StatusInternalServerError, "SettingService.GetAllRegionsByCityID.GettingCityCache", err) {
-	// 	return
-	// }
 	c.JSON(http.StatusOK, response)
 }

@@ -24,7 +24,7 @@ func NewPropertyRepo(db *mongo.Database) repo.PropertyI {
 		collection: db.Collection(config.PropertyCollection),
 	}
 }
-func (pr *propertyRepo) Create(property *models.CreateUpdateProperty) (string, error) {
+func (pr *propertyRepo) Create(ctx context.Context, property *models.CreateUpdateProperty) (string, error) {
 	createUpdateProperty := &models.CreateUpdateProperty{
 		ID:          property.ID,
 		Name:        property.Name,

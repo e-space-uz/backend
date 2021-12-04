@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"path/filepath"
 
+	"github.com/e-space-uz/backend/models"
 	"github.com/gin-gonic/gin"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
@@ -45,7 +46,7 @@ type AllFilesResponse struct {
 // @Description API for creating file
 // @Tags file_upload
 // @Param file formData file true "file"
-// @Param region body ek_entity_service.EntityFilesSwag  true "region"
+// @Param region body models.EntityFilesSwag  true "region"
 // @Accept multipart/form-data
 // @Accept json
 // @Produce json
@@ -54,7 +55,7 @@ type AllFilesResponse struct {
 func (h *handlerV1) FileUpload(c *gin.Context) {
 	var (
 		fileURL     string
-		entityFiles ek_entity_service.EntityFilesSwag
+		entityFiles models.EntityFilesSwag
 	)
 
 	if err := c.ShouldBind(&entityFiles); HandleHTTPError(c, http.StatusBadRequest, "DiscussionLogicService.Action.Create.BindingAction", err) {
@@ -119,13 +120,13 @@ func (h *handlerV1) FileUpload(c *gin.Context) {
 // @Tags file_upload
 // @Param file formData file true "file"
 // @Param region_id path string  true "region_id"
-// @Param comment body ek_setting_service.RegionFilesSwag  true "body"
+// @Param comment body models.RegionFilesSwag  true "body"
 // @Accept multipart/form-data
 // @Success 200 {object} FilesResponse
 func (h *handlerV1) UploadMainFile(c *gin.Context) {
 	var (
 		fileURL     string
-		regionFiles ek_setting_service.RegionFilesSwag
+		regionFiles models.RegionFilesSwag
 		regionID    = c.Param("region_id")
 	)
 

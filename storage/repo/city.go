@@ -1,8 +1,12 @@
 package repo
 
-import "github.com/e-space-uz/backend/models"
+import (
+	"context"
+
+	"github.com/e-space-uz/backend/models"
+)
 
 type CityI interface {
-	Get(id string) (*models.City, error)
-	GetAll(page, limit, soato uint32, name string) ([]*models.City, uint32, error)
+	Get(ctx context.Context, id string) (*models.City, error)
+	GetAll(ctx context.Context, page, limit, soato uint32, name string) ([]*models.City, uint32, error)
 }

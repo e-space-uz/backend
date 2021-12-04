@@ -21,7 +21,7 @@ func NewRegionRepo(db *mongo.Database) repo.RegionI {
 	return &regionRepo{
 		collection: db.Collection(config.RegionCollection)}
 }
-func (rr *regionRepo) Get(id string) (*models.Region, error) {
+func (rr *regionRepo) Get(ctx context.Context, id string) (*models.Region, error) {
 	var (
 		region         []*models.Region
 		response       *models.Region
@@ -47,16 +47,16 @@ func (rr *regionRepo) Get(id string) (*models.Region, error) {
 			primitive.E{Key: "path", Value: "$city"}, {Key: "preserveNullAndEmptyArrays", Value: false}}}})
 
 	row, err := rr.collection.Aggregate(
-		context.Background(),
+		ctx,
 		pipeline)
 	defer func() {
-		_ = row.Close(context.Background())
+		_ = row.Close(ctx)
 	}()
 	if err != nil {
 		return nil, err
 	}
 
-	if err := row.All(context.Background(), &region); err != nil {
+	if err := row.All(ctx, &region); err != nil {
 		return nil, err
 	}
 
@@ -76,7 +76,7 @@ func (rr *regionRepo) Get(id string) (*models.Region, error) {
 	return response, nil
 }
 
-func (rr *regionRepo) GetAll(page, limit, soato uint32, name string) ([]*models.Region, uint32, error) {
+func (rr *regionRepo) GetAll(ctx context.Context, page, limit uint32) ([]*models.Region, uint32, error) {
 	var (
 		regions        []*models.Region
 		response       []*models.Region
@@ -86,24 +86,6 @@ func (rr *regionRepo) GetAll(page, limit, soato uint32, name string) ([]*models.
 		skip           = (page - 1) * limit
 	)
 
-	if name != "" {
-		filter = append(filter, bson.E{Key: "name", Value: bson.D{
-			primitive.E{Key: "$regex", Value: name},
-			primitive.E{Key: "$options", Value: "im"},
-		}})
-		pipeline = append(pipeline, bson.D{
-			primitive.E{Key: "$match", Value: bson.D{
-				primitive.E{Key: "name", Value: bson.D{
-					primitive.E{Key: "$regex", Value: name},
-					primitive.E{Key: "$options", Value: "im"},
-				}}}}})
-	}
-	if soato != 0 {
-		filter = append(filter, bson.E{Key: "soato", Value: soato})
-		pipeline = append(pipeline, bson.D{
-			primitive.E{Key: "$match", Value: bson.D{
-				primitive.E{Key: "soato", Value: soato}}}})
-	}
 	pipeline = append(pipeline,
 		bson.D{primitive.E{Key: "$skip", Value: skip}},
 		bson.D{primitive.E{Key: "$limit", Value: limit}},
@@ -118,20 +100,20 @@ func (rr *regionRepo) GetAll(page, limit, soato uint32, name string) ([]*models.
 			primitive.E{Key: "path", Value: "$city"}, {Key: "preserveNullAndEmptyArrays", Value: false}}}},
 	)
 
-	count, err := rr.collection.CountDocuments(context.Background(), filter)
+	count, err := rr.collection.CountDocuments(ctx, filter)
 
 	if err != nil {
 		return nil, 0, err
 	}
 
 	rows, err := rr.collection.Aggregate(
-		context.Background(), pipeline)
+		ctx, pipeline)
 
 	if err != nil {
 		return nil, 0, err
 	}
 
-	if err := rows.All(context.Background(), &regions); err != nil {
+	if err := rows.All(ctx, &regions); err != nil {
 		return nil, 0, err
 	}
 	if err := utils.MarshalUnmarshal(regions, &response); err != nil {
@@ -139,7 +121,7 @@ func (rr *regionRepo) GetAll(page, limit, soato uint32, name string) ([]*models.
 	}
 	return response, uint32(count), nil
 }
-func (rr *regionRepo) GetAllByCity(cityID, name string) ([]*models.Region, uint32, error) {
+func (rr *regionRepo) GetAllByCity(ctx context.Context, cityID, name string) ([]*models.Region, uint32, error) {
 	var (
 		regions        []*models.Region
 		response       []*models.Region
@@ -180,20 +162,20 @@ func (rr *regionRepo) GetAllByCity(cityID, name string) ([]*models.Region, uint3
 		bson.D{primitive.E{Key: "$unwind", Value: bson.D{
 			primitive.E{Key: "path", Value: "$city"}, {Key: "preserveNullAndEmptyArrays", Value: false}}}})
 
-	count, err := rr.collection.CountDocuments(context.Background(), filter)
+	count, err := rr.collection.CountDocuments(ctx, filter)
 
 	if err != nil {
 		return nil, 0, err
 	}
 
 	rows, err := rr.collection.Aggregate(
-		context.Background(), pipeline)
+		ctx, pipeline)
 
 	if err != nil {
 		return nil, 0, err
 	}
 
-	if err := rows.All(context.Background(), &regions); err != nil {
+	if err := rows.All(ctx, &regions); err != nil {
 		return nil, 0, err
 	}
 

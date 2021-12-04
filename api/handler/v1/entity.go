@@ -19,25 +19,25 @@ import (
 // @Tags entity
 // @Accept json
 // @Produce json
-// @Param entity body ek_entity_service.CreateUpdateEntitySwag true "entity"
+// @Param entity body models.CreateUpdateEntitySwag true "entity"
 // @Success 201 {object} models.CreateResponse
 
 func (h *handlerV1) CreateEntity(c *gin.Context) {
 	var (
 		entity     es.CreateUpdateEntity
-		entitySwag ek_entity_service.CreateUpdateEntitySwag
+		entitySwag models.CreateUpdateEntitySwag
 	)
 
-	if err := c.BindJSON(&entitySwag); HandleHTTPError(c, http.StatusBadRequest, "EntityService.Entity.Create.BindingAction", err) {
+	if err := c.BindJSON(&entitySwag); HandleHTTPError(c, http.StatusBadRequest, http.StatusBadRequest, "Entity.Entity.Create.BindingAction", err) {
 		return
 	}
 	// TODO: MarshalUnmarshal make one function
 	arrayOfByte, err := json.Marshal(entitySwag)
 
-	if HandleHTTPError(c, http.StatusBadRequest, "EntityService.Entity.Create.Marshalling", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, http.StatusBadRequest, "Entity.Entity.Create.Marshalling", err) {
 		return
 	}
-	if err = json.Unmarshal(arrayOfByte, &entity); HandleHTTPError(c, http.StatusBadRequest, "EntityService.Entity.Create.Marshalling", err) {
+	if err = json.Unmarshal(arrayOfByte, &entity); HandleHTTPError(c, http.StatusBadRequest, http.StatusBadRequest, "Entity.Entity.Create.Marshalling", err) {
 		return
 	}
 
@@ -49,7 +49,7 @@ func (h *handlerV1) CreateEntity(c *gin.Context) {
 	id := primitive.NewObjectID().Hex()
 
 	if (entity.District.Soato) == 0 {
-		HandleHTTPError(c, http.StatusConflict, "EntityService.Entity.Create", errors.New("district soato required"))
+		HandleHTTPError(c, http.StatusBadRequest, http.StatusConflict, "Entity.Entity.Create", errors.New("district soato required"))
 		return
 	}
 
@@ -62,10 +62,10 @@ func (h *handlerV1) CreateEntity(c *gin.Context) {
 		entity.StatusId = models.NewEntityStatusTypeOne
 	}
 
-	resp, err := h.storage.EntityService().Create(
+	resp, err := h.storage.Entity().Create(
 		context.Background(),
 		&entity)
-	if HandleHTTPError(c, "EntityService.Entity.Create", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "Entity.Entity.Create", err) {
 		return
 	}
 	// actionHistory := &ek_analytic_service.ActionHistory{
@@ -87,7 +87,7 @@ func (h *handlerV1) CreateEntity(c *gin.Context) {
 			UpdatedFields: []*us.UpdatedFields{},
 		},
 	)
-	if HandleHTTPError(c, "EntityService.CreateEntityDraft.ActionHistoryCreate", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "Entity.CreateEntityDraft.ActionHistoryCreate", err) {
 		return
 	}
 	c.JSON(http.StatusCreated, resp)
@@ -106,17 +106,17 @@ func (h *handlerV1) GetEntity(c *gin.Context) {
 		ID     = c.Param("entity_id")
 		_, err = primitive.ObjectIDFromHex(ID)
 	)
-	if HandleHTTPError(c, http.StatusBadRequest, "EntityService.Entity.ParseId", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, http.StatusBadRequest, "Entity.Entity.ParseId", err) {
 		return
 	}
 
-	entity, err := h.storage.EntityService().Get(
+	entity, err := h.storage.Entity().Get(
 		context.Background(),
 		&es.ASGetRequest{
 			Id: ID,
 		})
 
-	if HandleHTTPError(c, "EntityService.Entity.GetEntity", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "Entity.Entity.GetEntity", err) {
 		return
 	}
 
@@ -138,17 +138,17 @@ func (h *handlerV1) GetEntity(c *gin.Context) {
 //	//cityID := c.Param("city_id")
 //	//
 //	//_, err := primitive.ObjectIDFromHex(cityID)
-//	//if HandleHTTPError(c, http.StatusBadRequest, "error while parsing entity id", err) {
+//	//if HandleHTTPError(c, http.StatusBadRequest, http.StatusBadRequest, "error while parsing entity id", err) {
 //	//	return
 //	//}
 //	//
-//	//entity, err := h.storage.EntityService().GetByCityID(
+//	//entity, err := h.storage.Entity().GetByCityID(
 //	//	context.Background(),
 //	//	&es.GetEntitiesByCityIdRequest{
 //	//		CityId: cityID,
 //	//	})
 //	//
-//	//if HandleHTTPError(c, "error while getting entities by city id", err) {
+//	//if HandleHTTPError(c, http.StatusBadRequest, "error while getting entities by city id", err) {
 //	//	return
 //	//}
 //	//
@@ -162,7 +162,7 @@ func (h *handlerV1) GetEntity(c *gin.Context) {
 // @Tags entity
 // @Accept json
 // @Produce json
-// @Param find query ek_entity_service.GetAllEntitiesRequestSwag false "filters"
+// @Param find query models.GetAllEntitiesRequestSwag false "filters"
 // @Success 200 {object} entity_service.GetAllEntitiesResponse
 
 func (h *handlerV1) GetAllEntities(c *gin.Context) {
@@ -203,12 +203,12 @@ func (h *handlerV1) GetAllEntities(c *gin.Context) {
 	}
 
 	if fromDate != "" {
-		if err = ValidateTime(fromDate); HandleHTTPError(c, "EntityService.Entity.GetAllEntities.ParseDate", err) {
+		if err = ValidateTime(fromDate); HandleHTTPError(c, http.StatusBadRequest, "Entity.Entity.GetAllEntities.ParseDate", err) {
 			return
 		}
 	}
 	if toDate != "" {
-		if err = ValidateTime(toDate); HandleHTTPError(c, "EntityService.Entity.GetAllEntities.ParseDate", err) {
+		if err = ValidateTime(toDate); HandleHTTPError(c, http.StatusBadRequest, "Entity.Entity.GetAllEntities.ParseDate", err) {
 			return
 		}
 	}
@@ -223,17 +223,17 @@ func (h *handlerV1) GetAllEntities(c *gin.Context) {
 	request.EntityNumber = entityNumber
 	//err = h.redisCache.Get(util.GenerateString(userInfo.Soato, cityID, regionID, statusID, date, strconv.Itoa(typeCode), strconv.Itoa(entityNumber)), &response)
 	//if err == models.ErrCacheMiss {
-	response, err := h.storage.EntityService().GetAll(
+	response, err := h.storage.Entity().GetAll(
 		context.Background(),
 		request)
-	if HandleHTTPError(c, "EntityService.Entity.GetAllEntities", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "Entity.Entity.GetAllEntities", err) {
 		return
 	}
 	//fmt.Println(response)
-	//	if err = h.redisCache.Set(util.GenerateString(userInfo.Soato, cityID, regionID, statusID, date, strconv.Itoa(typeCode), strconv.Itoa(entityNumber)), response); HandleHTTPError(c, "EntityService.Entity.CacheGetAllEntity", err) {
+	//	if err = h.redisCache.Set(util.GenerateString(userInfo.Soato, cityID, regionID, statusID, date, strconv.Itoa(typeCode), strconv.Itoa(entityNumber)), response); HandleHTTPError(c, http.StatusBadRequest, "Entity.Entity.CacheGetAllEntity", err) {
 	//		return
 	//	}
-	//} else if HandleHTTPError(c, http.StatusInternalServerError, "EntityService.Entity.GetAll.SetCaching", err) {
+	//} else if HandleHTTPError(c, http.StatusBadRequest, http.StatusInternalServerError, "Entity.Entity.GetAll.SetCaching", err) {
 	//	return
 	//}
 	c.JSON(http.StatusOK, response)
@@ -258,8 +258,8 @@ func (h *handlerV1) GetCollections(c *gin.Context) {
 			Search:         search,
 		}
 	)
-	response, err := h.storage.EntityService().GetCollection(context.Background(), request)
-	if HandleHTTPError(c, "EntityService.Entity.GetAllEntitieCollections", err) {
+	response, err := h.storage.Entity().GetCollection(context.Background(), request)
+	if HandleHTTPError(c, http.StatusBadRequest, "Entity.Entity.GetAllEntitieCollections", err) {
 		return
 	}
 
@@ -306,10 +306,10 @@ func (h *handlerV1) GetAllEntitiesWithProperties(c *gin.Context) {
 	request.Page = uint32(page)
 	request.Limit = uint32(limit)
 	request.TypeCode = uint64(entityTypeCode)
-	response, err := h.storage.EntityService().GetAllWithProperties(
+	response, err := h.storage.Entity().GetAllWithProperties(
 		context.Background(),
 		request)
-	if HandleHTTPError(c, "EntityService.Entity.GetAllWithProperties", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "Entity.Entity.GetAllWithProperties", err) {
 		return
 	}
 
@@ -342,7 +342,7 @@ func (h *handlerV1) GetAllByStaffID(c *gin.Context) {
 	// if err != nil {
 	// 	return
 	// }
-	// entities, err := h.storage.EntityService().GetAllByStaffID(
+	// entities, err := h.storage.Entity().GetAllByStaffID(
 	// 	context.Background(),
 	// 	&es.GetAllByStaffIDRequest{
 	// 		StaffId: staffId,
@@ -350,10 +350,10 @@ func (h *handlerV1) GetAllByStaffID(c *gin.Context) {
 	// 		Limit:   uint32(limit),
 	// 	})
 
-	// if HandleHTTPError(c, "Error while getting all entities by staff id", err) {
+	// if HandleHTTPError(c, http.StatusBadRequest, "Error while getting all entities by staff id", err) {
 	// 	return
 	// }
-	// if err = ProtoToStructNumeric(&response, entities); HandleHTTPError(c, http.StatusInternalServerError, "error while parsing entities response", err) {
+	// if err = ProtoToStructNumeric(&response, entities); HandleHTTPError(c, http.StatusBadRequest, http.StatusInternalServerError, "error while parsing entities response", err) {
 	// 	return
 	// }
 	// c.JSON(http.StatusOK, response)
@@ -367,7 +367,7 @@ func (h *handlerV1) GetAllByStaffID(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param entity_id path string  true "entity_id"
-// @Param entity body ek_entity_service.CreateUpdateEntitySwag true "entity"
+// @Param entity body models.CreateUpdateEntitySwag true "entity"
 // @Success 200 {object} models.CreateResponse
 
 func (h *handlerV1) UpdateEntity(c *gin.Context) {
@@ -377,16 +377,16 @@ func (h *handlerV1) UpdateEntity(c *gin.Context) {
 	)
 
 	_, err := primitive.ObjectIDFromHex(entityID)
-	if HandleHTTPError(c, http.StatusBadRequest, "EntityService.Entity.UpdateEntity", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, http.StatusBadRequest, "Entity.Entity.UpdateEntity", err) {
 		return
 	}
 
-	if err = c.ShouldBindJSON(&entity); HandleHTTPError(c, http.StatusBadRequest, "EntityService.Entity.UpdateEntity", err) {
+	if err = c.ShouldBindJSON(&entity); HandleHTTPError(c, http.StatusBadRequest, http.StatusBadRequest, "Entity.Entity.UpdateEntity", err) {
 		return
 	}
 
 	if (entity.District.Soato) == 0 {
-		HandleHTTPError(c, http.StatusConflict, "EntityService.Entity.UpdateEntity", errors.New("district soato required"))
+		HandleHTTPError(c, http.StatusBadRequest, http.StatusConflict, "Entity.Entity.UpdateEntity", errors.New("district soato required"))
 		return
 	}
 	userInfo, err := h.UserInfo(c, true)
@@ -406,7 +406,7 @@ func (h *handlerV1) UpdateEntity(c *gin.Context) {
 			UpdatedFields: []*us.UpdatedFields{},
 		},
 	)
-	if HandleHTTPError(c, "UserService.ActionHistory.Create", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "UserService.ActionHistory.Create", err) {
 		return
 	}
 
@@ -415,25 +415,25 @@ func (h *handlerV1) UpdateEntity(c *gin.Context) {
 	entity.Id = entityID
 	entity.StaffId = userInfo.ID
 
-	resp, err := h.storage.EntityService().Update(
+	resp, err := h.storage.Entity().Update(
 		context.Background(),
 		&entity)
-	if HandleHTTPError(c, "EntityService.Entity.UpdateEntity", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "Entity.Entity.UpdateEntity", err) {
 		return
 	}
 
-	// getResponse, err := h.storage.EntityService().GetAll(
+	// getResponse, err := h.storage.Entity().GetAll(
 	// 	context.Background(),
 	// 	&es.GetAllEntitiesRequest{
 	// 		EntitySoato: userInfo.Soato,
 	// 		Page:        1,
 	// 		Limit:       20,
 	// 	})
-	// if HandleHTTPError(c, "EntityService.Entity.GetAll", err) {
+	// if HandleHTTPError(c, http.StatusBadRequest, "Entity.Entity.GetAll", err) {
 	// 	return
 	// }
 
-	// if err = h.redisCache.Set(util.GenerateString(userInfo.Soato, "00"), getResponse); HandleHTTPError(c, "EntityService.Entity.Create.SetCache", err) {
+	// if err = h.redisCache.Set(util.GenerateString(userInfo.Soato, "00"), getResponse); HandleHTTPError(c, http.StatusBadRequest, "Entity.Entity.Create.SetCache", err) {
 	// 	return
 	// }
 
@@ -447,7 +447,7 @@ func (h *handlerV1) UpdateEntity(c *gin.Context) {
 // @Tags entity
 // @Accept json
 // @Produce json
-// @Param entity body ek_entity_service.UpdateEntityStatus true "entity"
+// @Param entity body models.UpdateEntityStatus true "entity"
 // @Success 200 {object} models.EmptyResponse
 
 func (h *handlerV1) UpdateEntityParentStatus(c *gin.Context) {
@@ -461,15 +461,15 @@ func (h *handlerV1) UpdateEntityParentStatus(c *gin.Context) {
 		return
 	}
 
-	if err := c.ShouldBindJSON(&entity); HandleHTTPError(c, http.StatusBadRequest, "EntityService.Entity.UpdateEntityParentStatus", err) {
+	if err := c.ShouldBindJSON(&entity); HandleHTTPError(c, http.StatusBadRequest, http.StatusBadRequest, "Entity.Entity.UpdateEntityParentStatus", err) {
 		return
 	}
 	_, err = primitive.ObjectIDFromHex(entity.EntityId)
-	if HandleHTTPError(c, http.StatusBadRequest, "EntityService.Entity.UpdateEntityParentStatus", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, http.StatusBadRequest, "Entity.Entity.UpdateEntityParentStatus", err) {
 		return
 	}
 	_, err = primitive.ObjectIDFromHex(entity.StatusId)
-	if HandleHTTPError(c, http.StatusBadRequest, "EntityService.Entity.UpdateEntityParentStatus", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, http.StatusBadRequest, "Entity.Entity.UpdateEntityParentStatus", err) {
 		return
 	}
 
@@ -478,15 +478,15 @@ func (h *handlerV1) UpdateEntityParentStatus(c *gin.Context) {
 		&es.ASGetParentStatusRequest{
 			ParentStatusId: entity.StatusId,
 		})
-	if HandleHTTPError(c, "EntityService.Entity.UpdateEntityParentStatus", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "Entity.Entity.UpdateEntityParentStatus", err) {
 		return
 	}
 	entity.StatusId = nextStatus.Id
-	resp, err := h.storage.EntityService().UpdateEntityStatus(
+	resp, err := h.storage.Entity().UpdateEntityStatus(
 		context.Background(),
 		&entity)
 
-	if HandleHTTPError(c, "EntityService.Entity.UpdateEntityParentStatus", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "Entity.Entity.UpdateEntityParentStatus", err) {
 		return
 	}
 	_, err = h.storage.ActionHistoryService().Create(
@@ -499,7 +499,7 @@ func (h *handlerV1) UpdateEntityParentStatus(c *gin.Context) {
 			EntityName:    "entity",
 			UpdatedFields: []*us.UpdatedFields{},
 		})
-	if HandleHTTPError(c, "EntityService.Entity.UpdateEntityStatusByActionID", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "Entity.Entity.UpdateEntityStatusByActionID", err) {
 		return
 	}
 
@@ -513,7 +513,7 @@ func (h *handlerV1) UpdateEntityParentStatus(c *gin.Context) {
 // @Tags entity
 // @Accept json
 // @Produce json
-// @Param entity body ek_entity_service.UpdateEntityStatus true "entity"
+// @Param entity body models.UpdateEntityStatus true "entity"
 // @Success 200 {object} models.EmptyResponse
 
 func (h *handlerV1) UpdateEntityStatus(c *gin.Context) {
@@ -527,23 +527,23 @@ func (h *handlerV1) UpdateEntityStatus(c *gin.Context) {
 		return
 	}
 
-	if err := c.ShouldBindJSON(&entity); HandleHTTPError(c, http.StatusBadRequest, "EntityService.Entity.UpdateEntityStatus", err) {
+	if err := c.ShouldBindJSON(&entity); HandleHTTPError(c, http.StatusBadRequest, http.StatusBadRequest, "Entity.Entity.UpdateEntityStatus", err) {
 		return
 	}
 	_, err = primitive.ObjectIDFromHex(entity.EntityId)
-	if HandleHTTPError(c, http.StatusBadRequest, "EntityService.Entity.UpdateEntityStatus", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, http.StatusBadRequest, "Entity.Entity.UpdateEntityStatus", err) {
 		return
 	}
 	_, err = primitive.ObjectIDFromHex(entity.StatusId)
-	if HandleHTTPError(c, http.StatusBadRequest, "EntityService.Entity.UpdateEntityStatus", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, http.StatusBadRequest, "Entity.Entity.UpdateEntityStatus", err) {
 		return
 	}
 
-	resp, err := h.storage.EntityService().UpdateEntityStatus(
+	resp, err := h.storage.Entity().UpdateEntityStatus(
 		context.Background(),
 		&entity)
 
-	if HandleHTTPError(c, "EntityService.Entity.UpdateEntityStatus", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "Entity.Entity.UpdateEntityStatus", err) {
 		return
 	}
 	_, err = h.storage.ActionHistoryService().Create(
@@ -556,7 +556,7 @@ func (h *handlerV1) UpdateEntityStatus(c *gin.Context) {
 			EntityName:    "entity",
 			UpdatedFields: []*us.UpdatedFields{},
 		})
-	if HandleHTTPError(c, "EntityService.Entity.UpdateEntityStatus", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "Entity.Entity.UpdateEntityStatus", err) {
 		return
 	}
 

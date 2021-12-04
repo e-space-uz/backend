@@ -14,9 +14,8 @@ import (
 // @Tags property
 // @Accept json
 // @Produce json
-// @Param property body ek_entity_service.PropertySwag true "property"
+// @Param property body models.PropertySwag true "property"
 // @Success 201 {object} ek_variables.CreateResponse
-
 func (h *handlerV1) CreateProperty(c *gin.Context) {
 	var (
 		property models.CreateUpdateProperty
@@ -50,7 +49,7 @@ func (h *handlerV1) CreateProperty(c *gin.Context) {
 func (h *handlerV1) GetProperty(c *gin.Context) {
 	var (
 		propertyID = c.Param("property_id")
-		response   *ek_entity_service.Property
+		response   *models.Property
 	)
 	_, err := primitive.ObjectIDFromHex(propertyID)
 	if HandleHTTPError(c, http.StatusBadRequest, "Error while parsing objectID, incorrect format", err) {
@@ -58,9 +57,8 @@ func (h *handlerV1) GetProperty(c *gin.Context) {
 	}
 	property, err := h.storage.Property().Get(
 		context.Background(),
-		&models.ASGetRequest{
-			Id: propertyID,
-		})
+		propertyID,
+	)
 	if HandleHTTPError(c, http.StatusBadGateway, "error while getting property", err) {
 		return
 	}
@@ -86,7 +84,7 @@ func (h *handlerV1) GetProperty(c *gin.Context) {
 
 func (h *handlerV1) GetAllProperties(c *gin.Context) {
 	var (
-		response *ek_entity_service.GetAllPropertiesResponse
+		response *models.GetAllPropertiesResponse
 		name     = c.Query("name")
 	)
 
@@ -126,7 +124,7 @@ func (h *handlerV1) GetAllProperties(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param property_id path string  true "property_id"
-// @Param property body ek_entity_service.PropertySwag true "property"
+// @Param property body models.PropertySwag true "property"
 // @Success 200 {object} ek_variables.CreateResponse
 
 func (h *handlerV1) UpdateProperty(c *gin.Context) {

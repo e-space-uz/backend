@@ -22,7 +22,7 @@ func NewCityRepo(db *mongo.Database) repo.CityI {
 		collection: db.Collection(config.CityCollection)}
 }
 
-func (cr *cityRepo) Get(id string) (*models.City, error) {
+func (cr *cityRepo) Get(ctx context.Context, id string) (*models.City, error) {
 	var cityDecode models.City
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -40,7 +40,7 @@ func (cr *cityRepo) Get(id string) (*models.City, error) {
 	return &cityDecode, nil
 }
 
-func (cr *cityRepo) GetAll(page, limit, code uint32, name string) ([]*models.City, uint32, error) {
+func (cr *cityRepo) GetAll(ctx context.Context, page, limit, code uint32, name string) ([]*models.City, uint32, error) {
 	var (
 		response []*models.City
 		cities   []*models.City
