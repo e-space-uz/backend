@@ -56,7 +56,7 @@ type CreateUpdateEntity struct {
 	City               *City                   `bson:"city"`
 	Region             *Region                 `bson:"region"`
 	District           *District               `bson:"district"`
-	StatusId           primitive.ObjectID      `bson:"status_id"`
+	Status             string                  `bson:"status"`
 	StaffIds           []primitive.ObjectID    `bson:"staff_ids"`
 	EntityFiles        []primitive.ObjectID    `bson:"entity_files"`
 	EntityDrafts       []primitive.ObjectID    `bson:"entity_drafts"`
@@ -82,7 +82,7 @@ type CreateEntityProperty struct {
 }
 type UpdateEntityStatus struct {
 	EntityID string `json:"entity_id"`
-	StatusID string `json:"status_id"`
+	StatusID string `json:"status"`
 }
 
 type CreateUpdateEntitySwag struct {
@@ -97,7 +97,7 @@ type CreateUpdateEntitySwag struct {
 }
 type UpdateWithActionIDEntitySwag struct {
 	ActionDescription string            `json:"action_description" binding:"required"`
-	StatusID          string            `json:"status_id" binding:"required"`
+	StatusID          string            `json:"status" binding:"required"`
 	ActionType        string            `json:"action_type" binding:"required"`
 	Deadline          int               `json:"deadline" binding:"required"`
 	EntityGallery     []string          `json:"entity_gallery" binding:"required"`
