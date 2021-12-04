@@ -98,15 +98,15 @@ func (h *handlerV1) FileUpload(c *gin.Context) {
 	if HandleHTTPError(c, http.StatusInternalServerError, "error while creating bucket in minio", err) {
 		return
 	}
-	_, err = h.storage.EntityFilesService().Create(context.Background(),
-		&entity_service.EntityFiles{
+	_, err = h.storage.EntityFiles().Create(context.Background(),
+		&models.EntityFiles{
 			Id:       fileID,
 			Url:      fileURL,
 			FileName: file.Filename,
 			Comment:  entityFiles.Comment,
 			User:     primitive.NewObjectID().Hex(),
 		})
-	if HandleHTTPError(c, "error while creating bucket in minio", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "error while creating bucket in minio", err) {
 		return
 	}
 
@@ -135,11 +135,11 @@ func (h *handlerV1) UploadMainFile(c *gin.Context) {
 		return
 	}
 
-	// resp, err := h.storage.RegionService().RegionExists(c, &setting_service.SSExistsRequest{
+	// resp, err := h.storage.Region().RegionExists(c, &setting_service.SSExistsRequest{
 	// 	Id: objectID.Hex(),
 	// })
 
-	// if HandleHTTPError(c, "Region.Action.Exists.RegionID", err) {
+	// if HandleHTTPError(c, http.StatusBadRequest , "Region.Action.Exists.RegionID", err) {
 	// 	return
 	// }
 
@@ -189,7 +189,7 @@ func (h *handlerV1) UploadMainFile(c *gin.Context) {
 	if HandleHTTPError(c, http.StatusInternalServerError, "error while creating bucket in minio", err) {
 		return
 	}
-	_, err = h.storage.RegionFilesService().Create(context.Background(),
+	_, err = h.storage.RegionFiles().Create(context.Background(),
 		&setting_service.RegionFiles{
 			Id:       fileID,
 			RegionId: objectID.Hex(),
@@ -198,7 +198,7 @@ func (h *handlerV1) UploadMainFile(c *gin.Context) {
 			Comment:  regionFiles.Comment,
 			User:     primitive.NewObjectID().Hex(),
 		})
-	if HandleHTTPError(c, "error while creating bucket in minio", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "error while creating bucket in minio", err) {
 		return
 	}
 

@@ -78,7 +78,7 @@ func (h *handlerV1) GetAllDistricts(c *gin.Context) {
 			Limit: uint32(limit),
 		})
 
-	if HandleHTTPError(c, "error while getting all districts", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "error while getting all districts", err) {
 		return
 	}
 
@@ -122,7 +122,7 @@ func (h *handlerV1) GetAllDistrictsByRegionID(c *gin.Context) {
 		name,
 	)
 
-	if HandleHTTPError(c, "SettingService.GetAllDistrictsByRegionID.ServiceInternal", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "SettingService.GetAllDistrictsByRegionID.ServiceInternal", err) {
 		return
 	}
 

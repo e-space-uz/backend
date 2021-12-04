@@ -44,7 +44,7 @@ func (h *handlerV1) CreateProperty(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param property_id path string true "property_id"
-// @Success 200 {object} entity_service.Property
+// @Success 200 {object} models.Property
 
 func (h *handlerV1) GetProperty(c *gin.Context) {
 	var (
@@ -80,7 +80,7 @@ func (h *handlerV1) GetProperty(c *gin.Context) {
 // @Param name query string false "name"
 // @Param page query integer false "page"
 // @Param limit query integer false "limit"
-// @Success 200 {object} entity_service.GetAllPropertiesResponse
+// @Success 200 {object} models.GetAllPropertiesResponse
 
 func (h *handlerV1) GetAllProperties(c *gin.Context) {
 	var (

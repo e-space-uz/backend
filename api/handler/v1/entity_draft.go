@@ -41,10 +41,10 @@ func (h *handlerV1) CreateEntityDraft(c *gin.Context) {
 		fmt.Println("id")
 	}
 	fmt.Println(objectID)
-	statusParent, err := h.storage.StatusService().GetParentStatus(context.Background(), &models.ASGetParentStatusRequest{
+	statusParent, err := h.storage.Status().GetParentStatus(context.Background(), &models.ASGetParentStatusRequest{
 		ParentStatusId: models.ParentStatus,
 	})
-	if HandleHTTPError(c, "EntityService.CreateEntityDraft.GetParentStatus", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "EntityService.CreateEntityDraft.GetParentStatus", err) {
 		return
 	}
 	entityDraft.StatusId = statusParent.Id
@@ -54,8 +54,8 @@ func (h *handlerV1) CreateEntityDraft(c *gin.Context) {
 		return
 	}
 
-	applicant, err := h.storage.ApplicantService().Get(context.Background(), &models.GetRequest{Id: userInfo.ID})
-	if HandleHTTPError(c, "EntityService.GetApplicant", err) {
+	applicant, err := h.storage.Applicant().Get(context.Background(), &models.GetRequest{Id: userInfo.ID})
+	if HandleHTTPError(c, http.StatusBadRequest, "EntityService.GetApplicant", err) {
 		return
 	}
 	soato := strconv.Itoa(int(entityDraft.Region.Soato))
@@ -71,7 +71,7 @@ func (h *handlerV1) CreateEntityDraft(c *gin.Context) {
 		&entityDraft,
 	)
 
-	if HandleHTTPError(c, "EntityService.CreateEntityDraft", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "EntityService.CreateEntityDraft", err) {
 		return
 	}
 
@@ -120,7 +120,7 @@ func (h *handlerV1) ConfirmEntityDraft(c *gin.Context) {
 			Comment:       entityDraft.Comment,
 		})
 
-	if HandleHTTPError(c, "error while updating entity draft comment", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "error while updating entity draft comment", err) {
 		return
 	}
 
@@ -149,7 +149,7 @@ func (h *handlerV1) GetEntityDraft(c *gin.Context) {
 			Id: ID,
 		})
 
-	if HandleHTTPError(c, "error while getting entity", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "error while getting entity", err) {
 		return
 	}
 
@@ -175,7 +175,7 @@ func (h *handlerV1) GetExpired(c *gin.Context) {
 			Limit: 10,
 		})
 
-	if HandleHTTPError(c, "Error while getting expired entities", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "Error while getting expired entities", err) {
 		return
 	}
 
@@ -216,7 +216,7 @@ func (h *handlerV1) GetAllEntityDraftByUserID(c *gin.Context) {
 			Limit:  uint32(limit),
 		})
 
-	if HandleHTTPError(c, "Error while getting all entities", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "Error while getting all entities", err) {
 		return
 	}
 
@@ -259,7 +259,7 @@ func (h *handlerV1) UpdateEntityDraft(c *gin.Context) {
 		return
 	}
 
-	_, err = h.storage.ActionHistoryService().Create(
+	_, err = h.storage.ActionHistory().Create(
 		context.Background(),
 		&models.ActionHistory{
 			Id:            primitive.NewObjectID().Hex(),
@@ -270,7 +270,7 @@ func (h *handlerV1) UpdateEntityDraft(c *gin.Context) {
 			UpdatedFields: []*models.UpdatedFields{},
 		},
 	)
-	if HandleHTTPError(c, "error while creating action history", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "error while creating action history", err) {
 		return
 	}
 
@@ -285,7 +285,7 @@ func (h *handlerV1) UpdateEntityDraft(c *gin.Context) {
 		context.Background(),
 		&entity)
 
-	if HandleHTTPError(c, "error while updating entity", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "error while updating entity", err) {
 		return
 	}
 
@@ -313,7 +313,7 @@ func (h *handlerV1) DeleteEntityDraft(c *gin.Context) {
 		context.Background(),
 		&models.ASDeleteRequest{Id: entityID})
 
-	if HandleHTTPError(c, "error while deleting entity draft", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "error while deleting entity draft", err) {
 		return
 	}
 
@@ -332,7 +332,7 @@ func (h *handlerV1) DeleteEntityDraftFromDB(c *gin.Context) {
 		context.Background(),
 		&models.ASDeleteRequest{Id: entityID})
 
-	if HandleHTTPError(c, "error while deleting entity draft from db", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "error while deleting entity draft from db", err) {
 		return
 	}
 

@@ -35,7 +35,7 @@ func (h *handlerV1) CreateGroupProperty(c *gin.Context) {
 		&groupProperty,
 	)
 
-	if HandleHTTPError(c, "error while creating group property", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "error while creating group property", err) {
 		return
 	}
 
@@ -48,7 +48,7 @@ func (h *handlerV1) CreateGroupProperty(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param group_property_id path string true "group_property_id"
-// @Success 200 {object} entity_service.GroupProperty
+// @Success 200 {object} models.GroupProperty
 
 func (h *handlerV1) GetGroupProperty(c *gin.Context) {
 	var (
@@ -65,7 +65,7 @@ func (h *handlerV1) GetGroupProperty(c *gin.Context) {
 			Id: groupPropertyID,
 		})
 
-	if HandleHTTPError(c, "error while getting group property", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "error while getting group property", err) {
 		return
 	}
 	err = ProtoToStruct(&response, property)
@@ -81,7 +81,7 @@ func (h *handlerV1) GetGroupProperty(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param status_id path string true "status_id"
-// @Success 200 {object} entity_service.GetAllGroupPropertyByStatusIdResponse
+// @Success 200 {object} models.GetAllGroupPropertyByStatusIdResponse
 
 func (h *handlerV1) GetGroupPropertyByStatusID(c *gin.Context) {
 	var (
@@ -112,11 +112,11 @@ func (h *handlerV1) GetGroupPropertyByStatusID(c *gin.Context) {
 			StatusId:       statusID,
 			OrganizationId: userInfo.OrganizationID,
 		})
-	if HandleHTTPError(c, "error while getting group property by status id", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "error while getting group property by status id", err) {
 		return
 	}
 	fmt.Println(len(response.GroupProperties))
-	if err = h.redisCache.SetWithDeadline(redisKey, response, time.Minute*4); HandleHTTPError(c, "EntityService.Entity.CacheGetAllEntity", err) {
+	if err = h.redisCache.SetWithDeadline(redisKey, response, time.Minute*4); HandleHTTPError(c, http.StatusBadRequest, "EntityService.Entity.CacheGetAllEntity", err) {
 		return
 	}
 	// } else if HandleHTTPError(c, http.StatusInternalServerError, "EntityService.GroupProperty.GetAll.GetCaching", err) {
@@ -135,7 +135,7 @@ func (h *handlerV1) GetGroupPropertyByStatusID(c *gin.Context) {
 // @Param search query string false "search"
 // @Param page query integer false "page"
 // @Param limit query integer false "limit"
-// @Success 200 {object} entity_service.GetAllGroupPropertiesResponse
+// @Success 200 {object} models.GetAllGroupPropertiesResponse
 
 func (h *handlerV1) GetAllGroupProperties(c *gin.Context) {
 	var (
@@ -161,7 +161,7 @@ func (h *handlerV1) GetAllGroupProperties(c *gin.Context) {
 			Limit:  uint32(limit),
 		})
 
-	if HandleHTTPError(c, "Erro while getting all group properties", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "Erro while getting all group properties", err) {
 		return
 	}
 	err = ProtoToStruct(&response, groupProperties)
@@ -201,7 +201,7 @@ func (h *handlerV1) UpdateGroupProperty(c *gin.Context) {
 		context.Background(),
 		&groupProperty)
 
-	if HandleHTTPError(c, "error while updating group property", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "error while updating group property", err) {
 		return
 	}
 
@@ -216,7 +216,7 @@ func (h *handlerV1) UpdateGroupProperty(c *gin.Context) {
 // @Produce json
 // @Param step query integer true "step"
 // @Param type query integer true "type"
-// @Success 200 {object} entity_service.GetAllGroupPropertiesByTypeResponse
+// @Success 200 {object} models.GetAllGroupPropertiesByTypeResponse
 
 func (h *handlerV1) GetAllGroupPropertiesByType(c *gin.Context) {
 	var (
@@ -240,7 +240,7 @@ func (h *handlerV1) GetAllGroupPropertiesByType(c *gin.Context) {
 			Type: uint32(typeOf),
 		})
 
-	if HandleHTTPError(c, "Erro while getting all group properties by type", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "Erro while getting all group properties by type", err) {
 		return
 	}
 	if err = ProtoToStructNumeric(&response, groupProperties); HandleHTTPError(c, http.StatusInternalServerError, "error while parsing proto to struct", err) {

@@ -76,7 +76,7 @@ func (h *handlerV1) CreateEntity(c *gin.Context) {
 	// 	EntityName:     "entity",
 	// }
 	// h.CreateActionHistory(c, actionHistory)
-	_, err = h.storage.ActionHistoryService().Create(
+	_, err = h.storage.ActionHistory().Create(
 		context.Background(),
 		&us.ActionHistory{
 			Id:            primitive.NewObjectID().Hex(),
@@ -99,7 +99,7 @@ func (h *handlerV1) CreateEntity(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param entity_id path string true "entity_id"
-// @Success 200 {object} entity_service.GetEntity
+// @Success 200 {object} models.GetEntity
 
 func (h *handlerV1) GetEntity(c *gin.Context) {
 	var (
@@ -129,7 +129,7 @@ func (h *handlerV1) GetEntity(c *gin.Context) {
 //// @Accept json
 //// @Produce json
 //// @Param city_id path string true "city_id"
-//// @Success 200 {object} entity_service.GetAllEntitiesResponse
+//// @Success 200 {object} models.GetAllEntitiesResponse
 //// @Failure 400 {object} models.FailureResponse
 //// @Failure 404 {object} models.FailureResponse
 //// @Failure 500 {object} models.FailureResponse
@@ -163,7 +163,7 @@ func (h *handlerV1) GetEntity(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param find query models.GetAllEntitiesRequestSwag false "filters"
-// @Success 200 {object} entity_service.GetAllEntitiesResponse
+// @Success 200 {object} models.GetAllEntitiesResponse
 
 func (h *handlerV1) GetAllEntities(c *gin.Context) {
 	var (
@@ -247,7 +247,7 @@ func (h *handlerV1) GetAllEntities(c *gin.Context) {
 // @Produce json
 // @Param collection_name query string  true "collection_name"
 // @Param search query string  false "search"
-// @Success 200 {object} entity_service.GetCollectionResponse
+// @Success 200 {object} models.GetCollectionResponse
 
 func (h *handlerV1) GetCollections(c *gin.Context) {
 	var (
@@ -277,7 +277,7 @@ func (h *handlerV1) GetCollections(c *gin.Context) {
 // @Param entity_type_code query string  false "entity_type_code"
 // @Param entity_number query string  false "entity_number"
 // @Param status_id query string  false "status_id"
-// @Success 200 {object} entity_service.GetAllEntitiesResponse
+// @Success 200 {object} models.GetAllEntitiesResponse
 
 func (h *handlerV1) GetAllEntitiesWithProperties(c *gin.Context) {
 	var (
@@ -323,7 +323,7 @@ func (h *handlerV1) GetAllEntitiesWithProperties(c *gin.Context) {
 // @Accept json
 //@Produce json
 //@Param staff_id path string  true "staff_id"
-//@Success 200 {object} entity_service.GetAllEntitiesResponse
+//@Success 200 {object} models.GetAllEntitiesResponse
 
 func (h *handlerV1) GetAllByStaffID(c *gin.Context) {
 	// var (
@@ -395,7 +395,7 @@ func (h *handlerV1) UpdateEntity(c *gin.Context) {
 	}
 
 	entityId := primitive.NewObjectID().Hex()
-	_, err = h.storage.ActionHistoryService().Create(
+	_, err = h.storage.ActionHistory().Create(
 		context.Background(),
 		&us.ActionHistory{
 			Id:            primitive.NewObjectID().Hex(),
@@ -473,7 +473,7 @@ func (h *handlerV1) UpdateEntityParentStatus(c *gin.Context) {
 		return
 	}
 
-	nextStatus, err := h.storage.StatusService().GetParentStatus(
+	nextStatus, err := h.storage.Status().GetParentStatus(
 		context.Background(),
 		&es.ASGetParentStatusRequest{
 			ParentStatusId: entity.StatusId,
@@ -489,7 +489,7 @@ func (h *handlerV1) UpdateEntityParentStatus(c *gin.Context) {
 	if HandleHTTPError(c, http.StatusBadRequest, "Entity.Entity.UpdateEntityParentStatus", err) {
 		return
 	}
-	_, err = h.storage.ActionHistoryService().Create(
+	_, err = h.storage.ActionHistory().Create(
 		context.Background(),
 		&us.ActionHistory{
 			Id:            actionHistoryID,
@@ -546,7 +546,7 @@ func (h *handlerV1) UpdateEntityStatus(c *gin.Context) {
 	if HandleHTTPError(c, http.StatusBadRequest, "Entity.Entity.UpdateEntityStatus", err) {
 		return
 	}
-	_, err = h.storage.ActionHistoryService().Create(
+	_, err = h.storage.ActionHistory().Create(
 		context.Background(),
 		&us.ActionHistory{
 			Id:            actionHistoryID,

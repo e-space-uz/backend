@@ -44,7 +44,7 @@ func (h *handlerV1) Login(c *gin.Context) {
 	loginResponse, err := h.storage.Staff().Login(context.Background(), &models.LoginRequest{
 		Login: login.Login,
 	})
-	if HandleHTTPError(c, "error while getting login info", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "error while getting login info", err) {
 		return
 	}
 	match, err := security.ComparePassword(loginResponse.Password, login.Password)
@@ -107,7 +107,7 @@ func (h *handlerV1) LoginExist(c *gin.Context) {
 		&models.LoginExistsRequest{
 			Login: loginExist.Login,
 		})
-	if HandleHTTPError(c, "error while checking login", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "error while checking login", err) {
 		return
 	}
 	c.JSON(http.StatusOK, loginExistanceResponse)
@@ -148,7 +148,7 @@ func (h *handlerV1) LoginRefresh(c *gin.Context) {
 		loginResponse, err := h.storage.Staff().Login(context.Background(), &models.LoginRequest{
 			Login: claims["login"].(string),
 		})
-		if HandleHTTPError(c, "error while getting login info", err) {
+		if HandleHTTPError(c, http.StatusBadRequest, "error while getting login info", err) {
 			return
 		}
 		m = map[string]interface{}{
@@ -218,7 +218,7 @@ func (h *handlerV1) UpdatePassword(c *gin.Context) {
 		Id: userID,
 	})
 
-	if HandleHTTPError(c, "error while getting login info", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "error while getting login info", err) {
 		return
 	}
 	match, err := security.ComparePassword(staffResponse.Password, UpdateBody.OldPassword)
@@ -244,7 +244,7 @@ func (h *handlerV1) UpdatePassword(c *gin.Context) {
 			NewPassword: UpdateBody.NewPassword,
 			UserId:      staffResponse.Id,
 		})
-	if HandleHTTPError(c, "error while updating password", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "error while updating password", err) {
 		return
 	}
 
@@ -309,7 +309,7 @@ func (h *handlerV1) UpdatePasswordFromToken(c *gin.Context) {
 	loginResponse, err := h.storage.Staff().Login(context.Background(), &models.LoginRequest{
 		Login: userInfo.Login,
 	})
-	if HandleHTTPError(c, "error while getting login info", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "error while getting login info", err) {
 		return
 	}
 	match, err := security.ComparePassword(loginResponse.Password, UpdateBody.OldPassword)
@@ -335,7 +335,7 @@ func (h *handlerV1) UpdatePasswordFromToken(c *gin.Context) {
 			NewPassword: UpdateBody.NewPassword,
 			UserId:      userInfo.ID,
 		})
-	if HandleHTTPError(c, "error while updating password", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "error while updating password", err) {
 		return
 	}
 

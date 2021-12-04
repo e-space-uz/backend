@@ -29,7 +29,7 @@ func (h *handlerV1) GetCity(c *gin.Context) {
 		Id: cityID,
 	})
 
-	if HandleHTTPError(c, "SettingService.GetCity.InterService", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "SettingService.GetCity.InterService", err) {
 		return
 	}
 
@@ -51,7 +51,6 @@ func (h *handlerV1) GetAllCities(c *gin.Context) {
 	var (
 		name       = c.Query("name")
 		soatoQuery = c.Query("soato")
-		soato      int
 	)
 	page, err := ParseQueryParam(c, h.log, "page", "1")
 	if err != nil {
@@ -62,22 +61,13 @@ func (h *handlerV1) GetAllCities(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	if soatoQuery != "" {
-		soato, err = ParseQueryParam(c, h.log, "soato", "0")
-		if err != nil {
-			return
-		}
-	}
-	cities, err := h.storage.City().GetAll(
+	cities, count, err := h.storage.City().GetAll(
 		context.Background(),
-		&models.GetAllCitiesRequest{
-			Name:  name,
-			Soato: uint32(soato),
-			Page:  uint32(page),
-			Limit: uint32(limit),
-		})
+		uint32(page),
+		uint32(limit),
+	)
 
-	if HandleHTTPError(c, "SettingService.GetAllCities.InternalService", err) {
+	if HandleHTTPError(c, http.StatusBadRequest, "SettingService.GetAllCities.InternalService", err) {
 		return
 	}
 
