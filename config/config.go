@@ -6,6 +6,18 @@ import (
 	"github.com/spf13/cast"
 )
 
+const (
+	EntityCollection        = "EntityCollection"
+	EntityDraftCollection   = "EntityDraftCollection"
+	EntityFilesCollection   = "EntityFilesCollection"
+	PropertyCollection      = "PropertyCollection"
+	GroupPropertyCollection = "GroupPropertyCollection"
+	UserCollection          = "UserCollection"
+	CityCollection          = "CityCollection"
+	RegionCollection        = "RegionCollection"
+	DistrictCollection      = "DistrictCollection"
+)
+
 type Config struct {
 	Environment string
 	LogLevel    string
