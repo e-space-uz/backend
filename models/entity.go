@@ -7,21 +7,21 @@ import (
 )
 
 type Entity struct {
-	ID             string               `json:"id" bson:"_id"`
-	EntitySoato    string               `json:"entity_soato" bson:"entity_soato"`
-	Address        string               `json:"address" bson:"address"`
-	RevertComment  string               `json:"revert_comment" bson:"revert_comment"`
-	EntityNumber   string               `json:"entity_number" bson:"entity_number"`
-	EntityTypeCode uint64               `json:"entity_type_code" bson:"entity_type_code"`
-	Version        uint64               `json:"version" bson:"version"`
-	Organizations  map[string]bool      `json:"organizations" bson:"organizations"`
-	Status         string               `json:"status" bson:"status"`
-	City           *City                `json:"city" bson:"city"`
-	Region         *Region              `json:"region" bson:"region"`
-	District       *District            `json:"district" bson:"district"`
-	StaffIds       []string             `json:"staff_ids" bson:"staff_ids"`
-	EntityGallery  []string             `json:"entity_gallery" bson:"entity_gallery"`
-	EntityDrafts   []*GetAllEntityDraft `json:"entity_drafts" bson:"entity_drafts"`
+	ID             string          `json:"id" bson:"_id"`
+	EntitySoato    string          `json:"entity_soato" bson:"entity_soato"`
+	Address        string          `json:"address" bson:"address"`
+	RevertComment  string          `json:"revert_comment" bson:"revert_comment"`
+	EntityNumber   string          `json:"entity_number" bson:"entity_number"`
+	EntityTypeCode uint64          `json:"entity_type_code" bson:"entity_type_code"`
+	Version        uint64          `json:"version" bson:"version"`
+	Organizations  map[string]bool `json:"organizations" bson:"organizations"`
+	Status         string          `json:"status" bson:"status"`
+	City           *City           `json:"city" bson:"city"`
+	Region         *Region         `json:"region" bson:"region"`
+	District       *District       `json:"district" bson:"district"`
+	StaffIds       []string        `json:"staff_ids" bson:"staff_ids"`
+	EntityGallery  []string        `json:"entity_gallery" bson:"entity_gallery"`
+	// EntityDrafts   []*GetAllEntityDraft `json:"entity_drafts" bson:"entity_drafts"`
 	EntityFiles    []*EntityFiles       `json:"entity_files" bson:"entity_files"`
 	EntityProperty []*GetEntityProperty `json:"entity_properties" bson:"entity_properties"`
 	CreatedAt      primitive.DateTime   `json:"created_at" bson:"created_at"`
