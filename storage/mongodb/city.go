@@ -17,7 +17,7 @@ type cityRepo struct {
 	collection *mongo.Collection
 }
 
-func NewCityRepo(db *mongo.Database) repo.CityStorageI {
+func NewCityRepo(db *mongo.Database) repo.CityI {
 	return &cityRepo{
 		collection: db.Collection(config.CityCollection)}
 }

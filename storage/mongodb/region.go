@@ -17,7 +17,7 @@ type regionRepo struct {
 	collection *mongo.Collection
 }
 
-func NewRegionRepo(db *mongo.Database) repo.RegionStorageI {
+func NewRegionRepo(db *mongo.Database) repo.RegionI {
 	return &regionRepo{
 		collection: db.Collection(config.RegionCollection)}
 }

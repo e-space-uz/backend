@@ -1,9 +1,13 @@
 package repo
 
-import "github.com/e-space-uz/backend/models"
+import (
+	"context"
 
-type RegionStorageI interface {
-	Get(id string) (*models.Region, error)
-	GetAll(page, limit, soato uint32, name string) ([]*models.Region, uint32, error)
-	GetAllByCity(cityID, name string) ([]*models.Region, uint32, error)
+	"github.com/e-space-uz/backend/models"
+)
+
+type RegionI interface {
+	Get(ctx context.Context, id string) (*models.Region, error)
+	GetAll(ctx context.Context, page, limit uint32, name string) ([]*models.Region, uint32, error)
+	GetAllByCity(ctx context.Context, cityID, name string) ([]*models.Region, uint32, error)
 }

@@ -13,10 +13,10 @@ const (
 	PropertyCollection      = "PropertyCollection"
 	GroupPropertyCollection = "GroupPropertyCollection"
 	UserCollection          = "UserCollection"
-	CityCollection             = "CityCollection"
-	RegionCollection           = "RegionCollection"
-	DistrictCollection         = "DistrictCollection"
-	
+	CityCollection          = "CityCollection"
+	RegionCollection        = "RegionCollection"
+	DistrictCollection      = "DistrictCollection"
+	TimeLayout              = "2006-01-02"
 )
 
 type Config struct {
@@ -29,6 +29,14 @@ type Config struct {
 	MongoUser     string
 	MongoPassword string
 	MongoDatabase string
+
+	LoginSecretAccessKey  string
+	LoginSecretRefreshKey string
+
+	BucketName          string
+	MinioDomain         string
+	MinioAccessKeyID    string
+	MinioSecretAccesKey string
 }
 
 func Load() Config {

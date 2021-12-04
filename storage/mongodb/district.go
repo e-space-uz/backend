@@ -17,7 +17,7 @@ type districtRepo struct {
 	collection *mongo.Collection
 }
 
-func NewDistrictRepo(db *mongo.Database) repo.DistrictStorageI {
+func NewDistrictRepo(db *mongo.Database) repo.DistrictI {
 	return &districtRepo{
 		collection: db.Collection(config.DistrictCollection)}
 }
