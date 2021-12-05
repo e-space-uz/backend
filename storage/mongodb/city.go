@@ -28,7 +28,6 @@ func (cr *cityRepo) Get(ctx context.Context, id string) (*models.City, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	if err := cr.collection.FindOne(
 		context.Background(),
 		bson.M{
@@ -36,7 +35,6 @@ func (cr *cityRepo) Get(ctx context.Context, id string) (*models.City, error) {
 		}).Decode(&cityDecode); err != nil {
 		return nil, err
 	}
-
 	return &cityDecode, nil
 }
 
@@ -68,7 +66,6 @@ func (cr *cityRepo) GetAll(ctx context.Context, page, limit uint32) ([]*models.C
 	if err != nil {
 		return nil, 0, err
 	}
-
 	if err := rows.All(context.Background(), &cities); err != nil {
 		return nil, 0, err
 	}

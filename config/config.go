@@ -44,9 +44,7 @@ func Load() Config {
 	cfg := Config{}
 
 	cfg.Environment = cast.ToString(getOrReturnDefault("ENVIRONMENT", "develop"))
-
 	cfg.LogLevel = cast.ToString(getOrReturnDefault("LOG_LEVEL", "debug"))
-
 	cfg.HttpPort = cast.ToString(getOrReturnDefault("HTTP_PORT", ":8000"))
 
 	cfg.MongoHost = cast.ToString(getOrReturnDefault("MONGO_HOST", "localhost"))

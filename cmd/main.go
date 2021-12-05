@@ -23,10 +23,10 @@ func main() {
 	mongoString := fmt.Sprintf("mongodb://%s:%d", cfg.MongoHost, cfg.MongoPort)
 
 	mongoConn, err := mongo.Connect(context.Background(), options.Client().ApplyURI(mongoString).SetAuth(credential))
-	defer mongoConn.Disconnect(context.Background())
 	if err != nil {
 		log.Error("error to connect to mongo database", logger.Error(err))
 	}
+	defer mongoConn.Disconnect(context.Background())
 	if err := mongoConn.Ping(context.Background(), nil); err != nil {
 		log.Error("Cannot connect to database error ->", logger.Error(err))
 		panic(err)
