@@ -23,32 +23,9 @@ func NewStaffRepo(db *mongo.Database) repo.StaffI {
 	}
 }
 
-func (sr *staffRepo) Create(staff *models.CreateUpdateStaff) (string, error) {
-
-	objectID, err := primitive.ObjectIDFromHex(staff.Id)
-	if err != nil {
-		return "", err
-	}
-
-	organizationID, err := primitive.ObjectIDFromHex(staff.OrganizationId)
-	if err != nil {
-		return "", err
-	}
-
-	passportIssueDate, err := time.Parse(config.TimeLayout, staff.PassportIssueDate)
-	if err != nil {
-		return "", err
-	}
-
-	roleID, err := primitive.ObjectIDFromHex(staff.RoleId)
-	if err != nil {
-		return "", err
-	}
+func (sr *staffRepo) Create(ctx context.Context, staff *models.CreateStaff) (string, error) {
 
 	createStaff := &models.CreateUpdateStaff{
-		ID:                 objectID,
-		RoleID:             roleID,
-		OrganizationID:     organizationID,
 		ExternalID:         staff.ExternalId,
 		FirstName:          staff.FirstName,
 		LastName:           staff.LastName,
@@ -63,7 +40,6 @@ func (sr *staffRepo) Create(staff *models.CreateUpdateStaff) (string, error) {
 		Password:           staff.Password,
 		LastLogin:          staff.LastLogin,
 		ExtraInfo:          staff.ExtraInfo,
-		PassportIssueDate:  passportIssueDate,
 		Policy:             staff.Policy,
 		PassportNumber:     staff.PassportNumber,
 		PassportIssuePlace: staff.PassportIssuePlace,
@@ -94,14 +70,14 @@ func (sr *staffRepo) Create(staff *models.CreateUpdateStaff) (string, error) {
 		}
 	}
 
-	_, err = sr.collection.InsertOne(
+	_, err := sr.collection.InsertOne(
 		context.Background(),
 		createStaff,
 	)
 
 	return createStaff.ID.Hex(), err
 }
-func (sr *staffRepo) GetAll(req *models.GetAllStaffsRequest) ([]*models.Staff, uint32, error) {
+func (sr *staffRepo) GetAll(ctx context.Context, req *models.GetAllStaffsRequest) ([]*models.Staff, uint32, error) {
 	var (
 		filter   = bson.D{}
 		skip     = (req.Page - 1) * req.Limit
@@ -203,7 +179,7 @@ func (sr *staffRepo) GetAll(req *models.GetAllStaffsRequest) ([]*models.Staff, u
 	return rows, uint32(count), nil
 }
 
-func (sr *staffRepo) GetCount(soato string, organizationID string) (int32, error) {
+func (sr *staffRepo) GetCount(ctx context.Context, soato string, organizationID string) (int32, error) {
 	var (
 		filter = bson.D{}
 	)
@@ -286,7 +262,7 @@ func (sr *staffRepo) SetStaffSoato(ctx context.Context, staffID, soato string) e
 	return err
 }
 
-// func (sr *staffRepo) ImportStaff(staff *models.CreateUpdateStaff) (string, error) {
+// func (sr *staffRepo) ImportStaff(ctx context.Context, staff *models.CreateUpdateStaff) (string, error) {
 
 // 	objectID, err := primitive.ObjectIDFromHex(staff.Id)
 // 	if err != nil {

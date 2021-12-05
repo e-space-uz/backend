@@ -25,18 +25,9 @@ func NewApplicantRepo(db *mongo.Database) repo.ApplicantI {
 	}
 }
 
-func (ar *applicantRepo) Create(applicant *models.Applicant) (*models.Applicant, error) {
+func (ar *applicantRepo) Create(ctx context.Context, applicant *models.Applicant) (string, error) {
 
-	passportIssueDate, err := time.Parse("2006-02-01", applicant.PassportIssueDate)
-	if err != nil {
-		return nil, err
-	}
-	passportExpiryDate, err := time.Parse("2006-02-01", applicant.PassportExpiryDate)
-	if err != nil {
-		return nil, err
-	}
 	createApplicant := &models.CreateUpdateApplicant{
-		ID:                 objectID,
 		Login:              applicant.Login,
 		FirstName:          applicant.FirstName,
 		LastName:           applicant.LastName,
@@ -48,8 +39,6 @@ func (ar *applicantRepo) Create(applicant *models.Applicant) (*models.Applicant,
 		Nationality:        applicant.Nationality,
 		PermanentAddress:   applicant.PermanentAddress,
 		PassportNumber:     applicant.PassportNumber,
-		PassportIssueDate:  passportIssueDate,
-		PassportExpiryDate: passportExpiryDate,
 		PassportIssuePlace: applicant.PassportIssuePlace,
 		Pin:                applicant.Pin,
 		Email:              applicant.Email,
@@ -61,18 +50,18 @@ func (ar *applicantRepo) Create(applicant *models.Applicant) (*models.Applicant,
 		CreatedAt:          time.Now(),
 		UpdatedAt:          time.Now(),
 	}
-	_, err = ar.collection.InsertOne(
+	_, err := ar.collection.InsertOne(
 		context.Background(),
 		createApplicant,
 	)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
-	return applicant, nil
+	return applicant.ID, nil
 }
 
-func (ar *applicantRepo) Get(id string) (*models.Applicant, error) {
+func (ar *applicantRepo) Get(ctx context.Context, id string) (*models.Applicant, error) {
 	var (
 		response  *models.Applicant
 		applicant *models.Applicant
@@ -100,38 +89,17 @@ func (ar *applicantRepo) Get(id string) (*models.Applicant, error) {
 	return response, nil
 }
 
-func (ar *applicantRepo) GetAll(req *models.GetAllApplicantsRequest) ([]*models.Applicant, uint32, error) {
+func (ar *applicantRepo) GetAll(ctx context.Context, page, limit uint32) ([]*models.Applicant, uint32, error) {
 	var (
 		response   []*models.Applicant
 		applicants []*models.Applicant
 		filter     = bson.D{}
 	)
 
-	if req.FullName != "" {
-		filter = append(filter, primitive.E{Key: "full_name", Value: bson.D{primitive.E{Key: "$regex", Value: req.FullName},
-			primitive.E{Key: "$options", Value: "im"}}})
-	}
-	if req.PhoneNumber != "" {
-		filter = append(filter, primitive.E{Key: "phone_number", Value: bson.D{primitive.E{Key: "$regex", Value: req.PhoneNumber},
-			primitive.E{Key: "$options", Value: "im"}}})
-	}
-
-	if req.PassportNumber != "" {
-		filter = append(filter, primitive.E{Key: "passport_number", Value: bson.D{primitive.E{Key: "$regex", Value: req.PassportNumber},
-			primitive.E{Key: "$options", Value: "im"}}})
-	}
-	if req.UserType != "" {
-		filter = append(filter, bson.E{Key: "user_type", Value: req.UserType})
-	}
-
-	if req.Pinfl != "" {
-		filter = append(filter, bson.E{Key: "pin", Value: req.Pinfl})
-	}
-
 	opts := options.Find()
 
-	skip := (req.Page - 1) * req.Limit
-	opts.SetLimit(int64(req.Limit))
+	skip := (page - 1) * limit
+	opts.SetLimit(int64(limit))
 	opts.SetSkip(int64(skip))
 	opts.SetSort(bson.M{
 		"created_at": -1,
@@ -162,15 +130,11 @@ func (ar *applicantRepo) GetAll(req *models.GetAllApplicantsRequest) ([]*models.
 	return response, uint32(count), nil
 }
 
-func (ar *applicantRepo) Update(applicant *models.Applicant) error {
-	objectID, err := primitive.ObjectIDFromHex(applicant.Id)
-	if err != nil {
-		return err
-	}
+func (ar *applicantRepo) Update(ctx context.Context, applicant *models.Applicant) error {
 
 	update := bson.M{
 		"$set": bson.M{
-			"id":           applicant.Id,
+			"id":           applicant.ID,
 			"first_name":   applicant.FirstName,
 			"last_name":    applicant.LastName,
 			"gender":       applicant.Gender,
@@ -178,8 +142,8 @@ func (ar *applicantRepo) Update(applicant *models.Applicant) error {
 			"user_type":    applicant.UserType,
 		}}
 
-	filter := bson.M{"_id": bson.M{"$eq": objectID}}
-	_, err = ar.collection.UpdateOne(
+	filter := bson.M{"_id": bson.M{"$eq": applicant.ID}}
+	_, err := ar.collection.UpdateOne(
 		context.Background(),
 		filter,
 		update,
