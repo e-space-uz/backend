@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -25,9 +26,7 @@ func (h *handlerV1) GetCity(c *gin.Context) {
 	if HandleHTTPError(c, http.StatusBadRequest, "SettingService.GetCity.ParseCityID", err) {
 		return
 	}
-	city, err := h.storage.City().Get(context.Background(), &models.GetReq{
-		Id: cityID,
-	})
+	city, err := h.storage.City().Get(context.Background(), cityID)
 
 	if HandleHTTPError(c, http.StatusBadRequest, "SettingService.GetCity.InterService", err) {
 		return
@@ -48,10 +47,6 @@ func (h *handlerV1) GetCity(c *gin.Context) {
 // @Param limit query integer false "limit"
 // @Success 200 {object} models.GetAllCitiesResponse
 func (h *handlerV1) GetAllCities(c *gin.Context) {
-	var (
-		name       = c.Query("name")
-		soatoQuery = c.Query("soato")
-	)
 	page, err := ParseQueryParam(c, h.log, "page", "1")
 	if err != nil {
 		return
@@ -61,7 +56,7 @@ func (h *handlerV1) GetAllCities(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	cities, count, err := h.storage.City().GetAll(
+	cities, _, err := h.storage.City().GetAll(
 		context.Background(),
 		uint32(page),
 		uint32(limit),

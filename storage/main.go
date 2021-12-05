@@ -8,6 +8,7 @@ import (
 
 type StorageI interface {
 	Applicant() repo.ApplicantI
+	Staff() repo.StaffI
 	City() repo.CityI
 	Region() repo.RegionI
 	District() repo.DistrictI
@@ -20,6 +21,7 @@ type StorageI interface {
 
 type storageMongo struct {
 	applicantRepo     repo.ApplicantI
+	staffRepo         repo.StaffI
 	propertyRepo      repo.PropertyI
 	cityRepo          repo.CityI
 	regionRepo        repo.RegionI
@@ -33,6 +35,7 @@ type storageMongo struct {
 func NewStorageMongo(db *db.Database) StorageI {
 	return &storageMongo{
 		// applicantRepo:     mongodb.NewApplicantRepo(db),
+		// staffRepo:         mongodb.NewStaffRepo(db),
 		cityRepo:          mongodb.NewCityRepo(db),
 		regionRepo:        mongodb.NewRegionRepo(db),
 		districtRepo:      mongodb.NewDistrictRepo(db),
@@ -70,4 +73,8 @@ func (s *storageMongo) EntityFiles() repo.EntityFilesI {
 }
 func (s *storageMongo) EntityDraft() repo.EntityDraftI {
 	return s.entityDraftRepo
+}
+
+func (s *storageMongo) Staff() repo.StaffI {
+	return s.staffRepo
 }

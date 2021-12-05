@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -48,11 +49,6 @@ func (h *handlerV1) GetDistrict(c *gin.Context) {
 
 func (h *handlerV1) GetAllDistricts(c *gin.Context) {
 
-	var (
-		name       = c.Query("name")
-		soatoQuery = c.Query("soato")
-		soato      int
-	)
 	page, err := ParseQueryParam(c, h.log, "page", "1")
 	if err != nil {
 		return
@@ -62,21 +58,12 @@ func (h *handlerV1) GetAllDistricts(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	if soatoQuery != "" {
-		soato, err = ParseQueryParam(c, h.log, "soato", "0")
-		if err != nil {
-			return
-		}
-	}
 
-	districts, err := h.storage.District().GetAll(
+	districts, _, err := h.storage.District().GetAll(
 		context.Background(),
-		&models.GetAllDistrictsRequest{
-			Name:  name,
-			Soato: uint32(soato),
-			Page:  uint32(page),
-			Limit: uint32(limit),
-		})
+		uint32(page),
+		uint32(limit),
+	)
 
 	if HandleHTTPError(c, http.StatusBadRequest, "error while getting all districts", err) {
 		return
@@ -102,8 +89,6 @@ func (h *handlerV1) GetAllDistrictsByRegionID(c *gin.Context) {
 		cityID   = c.Param("city_id")
 		name     = c.Query("name")
 		_, err   = primitive.ObjectIDFromHex(cityID)
-		response = &models.GetAllDistrictsResponse{}
-		// redisKwwey = ek_variables.RedisDistrictKey + c.Request.URL.Query().Encode()
 	)
 	if HandleHTTPError(c, http.StatusBadRequest, "SettingService.GetAllDistrictsByRegionID.ParsingCityObjectID ", err) {
 		return
@@ -113,9 +98,7 @@ func (h *handlerV1) GetAllDistrictsByRegionID(c *gin.Context) {
 	if HandleHTTPError(c, http.StatusBadRequest, "SettingService.GetAllDistrictsByRegionID.ParsingRegionObjectID ", err) {
 		return
 	}
-	// err = h.redisCache.Get(redisKey, &response)
-	// if err == ek_variables.ErrCacheMiss {
-	response, err = h.storage.District().GetAllByCityRegion(
+	response, _, err := h.storage.District().GetAllByCityRegion(
 		context.Background(),
 		regionID,
 		cityID,

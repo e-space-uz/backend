@@ -53,7 +53,6 @@ func New(opt *RouterOptions) *gin.Engine {
 			})
 		})
 
-		routesV1.POST("/file-upload", handlerV1.FileUpload)
 		routesV1.POST("/image-upload", handlerV1.ImageUpload)
 
 		//City endpoints
@@ -77,40 +76,28 @@ func New(opt *RouterOptions) *gin.Engine {
 		routesV1.GET("/applicant", handlerV1.GetAllApplicants)
 		routesV1.GET("/applicant-by-token", handlerV1.GetApplicantByToken)
 		routesV1.PUT("/applicant/:applicant_id", handlerV1.UpdateApplicant)
-		routesV1.GET("/applicant/one-id/:code", handlerV1.GetOneIDAccessToken)
 
 		//Staff endpoints
-		routesV1.POST("/staff", handlerV1.CreateStaff)
 		routesV1.GET("/staff/:staff_id", handlerV1.GetStaff)
 		routesV1.GET("/staff", handlerV1.GetAllStaffs)
 		routesV1.GET("/staff-by-token", handlerV1.GetStaffByToken)
-		routesV1.PUT("/staff/:staff_id", handlerV1.UpdateStaff)
 
 		//Entity endpoints
 		routesV1.POST("/entity", handlerV1.CreateEntity)
 		routesV1.GET("/entity/:entity_id", handlerV1.GetEntity)
-		routesV1.GET("/entity", handlerV1.GetAllEntities)
 		routesV1.GET("/entity-properties", handlerV1.GetAllEntitiesWithProperties)
 
 		//Entity Draft endpoints
 		routesV1.POST("/entity-draft", handlerV1.CreateEntityDraft)
 		routesV1.GET("/entity-draft/:entity_draft_id", handlerV1.GetEntityDraft)
-		routesV1.GET("/entity-draft", handlerV1.GetAllEntityDraft)
 
 		//Property endpoints
 		routesV1.POST("/property", handlerV1.CreateProperty)
-		routesV1.GET("/property/:property_id", handlerV1.GetProperty)
-		routesV1.GET("/property", handlerV1.GetAllProperties)
 		routesV1.PUT("/property/:property_id", handlerV1.UpdateProperty)
-		routesV1.DELETE("/property/:property_id", handlerV1.DeleteProperty)
 
 		// Group property endpoints
-		routesV1.GET("/group-property/:group_property_id", handlerV1.GetGroupProperty)
-		routesV1.GET("/group-property-status/:status_id", handlerV1.GetGroupPropertyByStatusID)
 		routesV1.GET("/group-property", handlerV1.GetAllGroupProperties)
 		routesV1.GET("/group-property-type", handlerV1.GetAllGroupPropertiesByType)
-		routesV1.POST("/group-property", handlerV1.CreateGroupProperty)
-		routesV1.PUT("/group-property/:group_property_id", handlerV1.UpdateGroupProperty)
 	}
 
 	// swagger

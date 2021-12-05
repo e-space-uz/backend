@@ -73,7 +73,7 @@ func (h *handlerV1) GetAllRegions(c *gin.Context) {
 	}
 	fmt.Println(soato)
 
-	regions, count, err := h.storage.Region().GetAll(
+	regions, _, err := h.storage.Region().GetAll(
 		context.Background(),
 		uint32(page),
 		uint32(limit),
@@ -106,7 +106,7 @@ func (h *handlerV1) GetAllRegionsByCityID(c *gin.Context) {
 	if HandleHTTPError(c, http.StatusBadRequest, "SettingService.GetAllRegionsByCityID.ParsingCityID", err) {
 		return
 	}
-	response, count, err := h.storage.Region().GetAllByCity(
+	response, _, err := h.storage.Region().GetAllByCity(
 		context.Background(),
 		cityID,
 		name,
