@@ -49,7 +49,7 @@ func New(opt *RouterOptions) *gin.Engine {
 		routesV1.GET("/", func(context *gin.Context) {
 			context.JSON(http.StatusOK, gin.H{
 				"success": true,
-				"data":    "ekadastr api_gateway",
+				"data":    "e-space",
 			})
 		})
 
