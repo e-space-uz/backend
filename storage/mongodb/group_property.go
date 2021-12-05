@@ -91,26 +91,14 @@ func (sr *groupProperty) Get(ctx context.Context, id string) (*models.GroupPrope
 	return response, nil
 }
 
-func (sr *groupProperty) GetAll(ctx context.Context, page, limit uint32, search string) ([]*models.GetAllGroupProperty, uint32, error) {
+func (sr *groupProperty) GetAll(ctx context.Context, page, limit uint32) ([]*models.GetAllGroupProperty, uint32, error) {
 	var (
 		groupPropertiesDecode   []*models.GetAllGroupProperty
 		groupPropertiesResponse []*models.GetAllGroupProperty
-		filter                  = bson.D{}
 		filterCount             = bson.D{}
 		skip                    = (page - 1) * limit
 		pipeline                = mongo.Pipeline{}
 	)
-
-	if search != "" {
-		filter = bson.D{primitive.E{Key: "$match", Value: bson.D{
-			primitive.E{Key: "name", Value: bson.D{
-				primitive.E{Key: "$regex", Value: search},
-				primitive.E{Key: "$options", Value: "im"}}}}}}
-		pipeline = append(pipeline, filter)
-		filterCount = bson.D{primitive.E{Key: "name", Value: bson.D{
-			primitive.E{Key: "$regex", Value: search},
-			primitive.E{Key: "$options", Value: "im"}}}}
-	}
 
 	count, err := sr.collection.CountDocuments(context.Background(), filterCount)
 

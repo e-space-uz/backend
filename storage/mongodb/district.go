@@ -41,7 +41,7 @@ func (cr *districtRepo) Get(ctx context.Context, id string) (*models.District, e
 }
 
 // This method to get all districts.
-func (cr *districtRepo) GetAll(ctx context.Context, page, limit, code uint32, name string) ([]*models.District, uint32, error) {
+func (cr *districtRepo) GetAll(ctx context.Context, page, limit uint32) ([]*models.District, uint32, error) {
 	var (
 		response         []*models.District
 		districts        []*models.District
@@ -51,26 +51,6 @@ func (cr *districtRepo) GetAll(ctx context.Context, page, limit, code uint32, na
 		skip             = (page - 1) * limit
 		pipeline         = mongo.Pipeline{}
 	)
-	if name != "" {
-		filter = append(filter, bson.E{Key: "name", Value: bson.D{
-			primitive.E{Key: "$regex", Value: name},
-			primitive.E{Key: "$options", Value: "im"},
-		}})
-
-		pipeline = append(pipeline, bson.D{
-			primitive.E{Key: "$match", Value: bson.D{
-				primitive.E{Key: "name", Value: bson.D{
-					primitive.E{Key: "$regex", Value: name},
-					primitive.E{Key: "$options", Value: "im"},
-				}}}}})
-	}
-	if code != 0 {
-		filter = append(filter, bson.E{Key: "code", Value: code})
-
-		pipeline = append(pipeline, bson.D{
-			primitive.E{Key: "$match", Value: bson.D{
-				primitive.E{Key: "code", Value: code}}}})
-	}
 
 	count, err := cr.collection.CountDocuments(context.Background(), filter)
 
