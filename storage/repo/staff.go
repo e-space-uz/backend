@@ -14,9 +14,4 @@ type StaffI interface {
 	LoginExists(ctx context.Context, login string) (bool, error)
 	Login(ctx context.Context, login string) (*models.LoginInfo, error)
 	Delete(ctx context.Context, id string) error
-	Exists(ctx context.Context, id string) (bool, error)
-	GetCount(ctx context.Context, soato string, organizationId string) (int32, error)
-	UpdatePassword(ctx context.Context, oldPassword, newPassword string, ApplicantID string) error
-	SetRoleID(ctx context.Context, roleID, staffID string) error
-	SetStaffSoato(ctx context.Context, staffID, soato string) error
 }

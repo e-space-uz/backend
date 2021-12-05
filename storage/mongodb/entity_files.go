@@ -25,7 +25,7 @@ func NewEntityFilesRepo(db *mongo.Database) repo.EntityFilesI {
 	}
 }
 func (sr *entityFilesRepo) Create(ctx context.Context, entityFiles *models.CreateEntityFiles) (string, error) {
-	resp, err := sr.collection.InsertOne(
+	_, err := sr.collection.InsertOne(
 		context.Background(),
 		entityFiles,
 	)
@@ -33,7 +33,7 @@ func (sr *entityFilesRepo) Create(ctx context.Context, entityFiles *models.Creat
 		return "", err
 	}
 
-	return resp.InsertedID.(primitive.ObjectID).Hex(), nil
+	return entityFiles.ID.Hex(), nil
 }
 
 func (sr *entityFilesRepo) Get(ctx context.Context, id string) (*models.EntityFiles, error) {

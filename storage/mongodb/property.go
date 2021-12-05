@@ -44,14 +44,14 @@ func (pr *propertyRepo) Create(ctx context.Context, property *models.CreateUpdat
 		})
 	}
 
-	resp, err := pr.collection.InsertOne(
+	_, err := pr.collection.InsertOne(
 		context.Background(),
 		createUpdateProperty,
 	)
 	if err != nil {
 		return "", err
 	}
-	return resp.InsertedID.(primitive.ObjectID).Hex(), nil
+	return createUpdateProperty.ID.Hex(), nil
 }
 
 func (pr *propertyRepo) Get(ctx context.Context, id string) (*models.Property, error) {

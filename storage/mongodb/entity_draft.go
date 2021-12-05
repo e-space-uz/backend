@@ -86,11 +86,11 @@ func (cr entityDraftRepo) Create(ctx context.Context, req *models.CreateEntityDr
 	} else {
 		createEntity.EntityGallery = []string{}
 	}
-	resp, err := cr.collection.InsertOne(
+	_, err = cr.collection.InsertOne(
 		ctx,
 		createEntity)
 
-	return resp.InsertedID.(primitive.ObjectID).Hex(), err
+	return createEntity.ID.Hex(), err
 }
 
 func (cr entityDraftRepo) Get(ctx context.Context, id string) (*models.EntityDraft, error) {

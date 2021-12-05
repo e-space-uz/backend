@@ -32,14 +32,14 @@ func (sr *groupProperty) Create(ctx context.Context, groupProperty *models.Creat
 			Order:      property.Order}
 	}
 
-	resp, err := sr.collection.InsertOne(
+	_, err := sr.collection.InsertOne(
 		context.Background(),
 		groupPropertiesArray,
 	)
 	if err != nil {
 		return "", err
 	}
-	return resp.InsertedID.(primitive.ObjectID).Hex(), nil
+	return groupProperty.ID.Hex(), nil
 }
 
 func (sr *groupProperty) Get(ctx context.Context, id string) (*models.GroupProperty, error) {

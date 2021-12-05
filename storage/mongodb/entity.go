@@ -92,14 +92,14 @@ func (er *entityRepo) Create(ctx context.Context, entity *models.CreateUpdateEnt
 	}
 
 	createEntity.EntityDrafts = []primitive.ObjectID{}
-	resp, err := er.collection.InsertOne(
+	_, err = er.collection.InsertOne(
 		ctx,
 		createEntity,
 	)
 	if err != nil {
 		return "", err
 	}
-	return resp.InsertedID.(primitive.ObjectID).Hex(), nil
+	return createEntity.ID.Hex(), nil
 }
 
 func (er *entityRepo) Get(ctx context.Context, id string) (*models.Entity, error) {
