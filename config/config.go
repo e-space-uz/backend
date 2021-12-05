@@ -2,6 +2,7 @@ package config
 
 import (
 	"os"
+	"time"
 
 	"github.com/spf13/cast"
 )
@@ -17,6 +18,11 @@ const (
 	RegionCollection        = "RegionCollection"
 	DistrictCollection      = "DistrictCollection"
 	TimeLayout              = "2006-01-02"
+
+	// Access token expire time duration
+	AccessTokenExpireDuration time.Duration = 2 * 24 * time.Hour
+	//  Refresh token expire time duration
+	RefreshTokenExpireDuration time.Duration = 7 * 24 * time.Hour
 )
 
 type Config struct {

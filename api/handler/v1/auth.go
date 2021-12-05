@@ -7,6 +7,8 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
+	"github.com/e-space-uz/backend/config"
+	"github.com/e-space-uz/backend/models"
 	"github.com/e-space-uz/backend/pkg/security"
 	"github.com/gin-gonic/gin"
 )
@@ -23,8 +25,8 @@ import (
 func (h *handlerV1) Login(c *gin.Context) {
 	var (
 		login                      models.LoginRequest
-		accessTokenExpireDuration  = models.AccessTokenExpireDuration
-		refreshTokenExpireDuration = models.RefreshTokenExpireDuration
+		accessTokenExpireDuration  = config.AccessTokenExpireDuration
+		refreshTokenExpireDuration = config.RefreshTokenExpireDuration
 	)
 
 	if err := c.ShouldBindJSON(&login); HandleHTTPError(c, http.StatusBadRequest, "DiscussionLogicService.Action.Create.BindingAction", err) {
