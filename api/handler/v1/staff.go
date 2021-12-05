@@ -152,16 +152,9 @@ func (h *handlerV1) GetAllStaffs(c *gin.Context) {
 
 	staffs, err := h.storage.User().GetAll(
 		context.Background(),
-		&models.GetAllStaffsRequest{
-			Page:           uint32(page),
-			Limit:          uint32(limit),
-			Soato:          soato,
-			PhoneNumber:    phoneNumber,
-			OrganizationId: organizationId,
-			SearchString:   searchString,
-			RoleId:         roleId,
-			Status:         status,
-		})
+		uint32(page),
+		uint32(limit),
+	)
 
 	if HandleHTTPError(c, http.StatusBadRequest, "error while getting all staffs", err) {
 		return

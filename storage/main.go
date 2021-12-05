@@ -32,7 +32,7 @@ type storageMongo struct {
 
 func NewStorageMongo(db *db.Database) StorageI {
 	return &storageMongo{
-		userRepo:          mongodb.NewUserRepo(db),
+		userRepo:          mongodb.NewRepo(db),
 		cityRepo:          mongodb.NewCityRepo(db),
 		regionRepo:        mongodb.NewRegionRepo(db),
 		districtRepo:      mongodb.NewDistrictRepo(db),
