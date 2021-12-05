@@ -15,7 +15,7 @@ import (
 // @Accept json
 // @Produce json
 // @Param staff_id path string  true "staff_id"
-// @Success 200 {object} user_service.Staff
+// @Success 200 {object} models.Staff
 func (h *handlerV1) GetStaff(c *gin.Context) {
 	id := c.Param("staff_id")
 
@@ -40,7 +40,7 @@ func (h *handlerV1) GetStaff(c *gin.Context) {
 // @Tags staff
 // @Accept json
 // @Produce json
-// @Success 200 {object} user_service.Staff
+// @Success 200 {object} models.Staff
 func (h *handlerV1) GetStaffByToken(c *gin.Context) {
 	userInfo, err := h.UserInfo(c, true)
 	if HandleHTTPError(c, http.StatusUnauthorized, "UserService.StaffByToken", err) {
@@ -61,8 +61,8 @@ func (h *handlerV1) GetStaffByToken(c *gin.Context) {
 // @Tags staff
 // @Accept json
 // @Produce json
-// @Param find query ek_user_service.GetAllStaffsRequestSwag false "filters"
-// @Success 200 {object} user_service.GetAllStaffsResponse
+// @Param find query models.GetAllStaffsRequestSwag false "filters"
+// @Success 200 {object} models.GetAllStaffsResponse
 func (h *handlerV1) GetAllStaffs(c *gin.Context) {
 
 	page, err := ParseQueryParam(c, h.log, "page", "1")

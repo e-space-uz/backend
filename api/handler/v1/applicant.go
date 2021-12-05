@@ -15,8 +15,8 @@ import (
 // @Tags applicant
 // @Accept json
 // @Produce json
-// @Param applicant body ek_user_service.CreateUpdateApplicantSwag  true "applicant"
-// @Success 201 {object} user_service.CreateResponse
+// @Param applicant body models.CreateUpdateApplicantSwag  true "applicant"
+// @Success 201 {object} models.CreateResponse
 func (h *handlerV1) CreateApplicant(c *gin.Context) {
 	var (
 		applicant models.Applicant
@@ -46,7 +46,7 @@ func (h *handlerV1) CreateApplicant(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param applicant_id path string  true "applicant_id"
-// @Success 200 {object} user_service.Applicant
+// @Success 200 {object} models.Applicant
 func (h *handlerV1) GetApplicant(c *gin.Context) {
 	var (
 		applicantID = c.Param("applicant_id")
@@ -73,8 +73,8 @@ func (h *handlerV1) GetApplicant(c *gin.Context) {
 // @Tags applicant
 // @Accept json
 // @Produce json
-// @Param find query ek_user_service.GetAllApplicantsRequestSwag false "filters"
-// @Success 200 {object} user_service.GetAllApplicantsResponse
+// @Param find query models.GetAllApplicantsRequestSwag false "filters"
+// @Success 200 {object} models.GetAllApplicantsResponse
 func (h *handlerV1) GetAllApplicants(c *gin.Context) {
 	page, err := ParseQueryParam(c, h.log, "page", "1")
 	if err != nil {
@@ -109,8 +109,8 @@ func (h *handlerV1) GetAllApplicants(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param applicant_id path string  true "applicant_id"
-// @Param applicant body ek_user_service.CreateUpdateApplicantSwag true "applicant"
-// @Success 200 {object} user_service.CreateResponse
+// @Param applicant body models.CreateUpdateApplicantSwag true "applicant"
+// @Success 200 {object} models.CreateResponse
 func (h *handlerV1) UpdateApplicant(c *gin.Context) {
 	var (
 		applicant   models.Applicant
@@ -144,7 +144,7 @@ func (h *handlerV1) UpdateApplicant(c *gin.Context) {
 // @Tags applicant
 // @Accept json
 // @Produce json
-// @Success 200 {object} user_service.Applicant
+// @Success 200 {object} models.Applicant
 func (h *handlerV1) GetApplicantByToken(c *gin.Context) {
 	userInfo, err := h.UserInfo(c, true)
 	if err != nil {
